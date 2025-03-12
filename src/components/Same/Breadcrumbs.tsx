@@ -19,7 +19,7 @@ const Breadcrumbs = ({container}:BreadcrumbsProps) => {
         title: <a href='/home'>Home</a>,
       },
       {
-        title: container === 'bookPage' ? <a href='/book'><p className='text-black font-semibold'>Book({Number(bookId)+1})</p></a> : container === 'myOrder' ? <a href='/myOrder'><p className='text-black font-semibold'>My Order</p></a> : container === 'wishlist' ? <a href='/wishlist'><p className='text-black font-semibold'>My Wishlist</p></a> : "",
+        title: container === 'bookPage' ? <a href='/book'><p className='text-black font-semibold'>Book({Number(bookId)+1})</p></a> : container === 'myOrder' ? <a href='/myOrder'><p className='text-black font-semibold'>My Order</p></a> : container === 'wishlist' ? <a href='/wishlist'><p className='text-black font-semibold'>My Wishlist</p></a> :container === 'cart' ? <a href='/cart'><p className='text-black font-semibold'>My cart</p></a> : "",
       }
     ]}
   />
