@@ -9,6 +9,8 @@ import BookPage from './pages/BookPage'
 import MyOrder from './pages/MyOrder'
 import WishList from './pages/WishList'
 import Cart from './pages/Cart'
+import UserProfile from './pages/UserProfile'
+import GuestView from './components/Same/GuestView'
 const App = () => {
   return (
     <div>
@@ -21,6 +23,8 @@ const App = () => {
         <Route path='myOrder' element={<MyOrder/>}/>
         <Route path='/wishlist' element={<WishList/>}/>
         <Route path='/cart' element={<Cart/>}/>
+        <Route path='/profile' element={<UserProfile/>}/>
+        <Route path='/guest' element={<GuestView />}/>
       </Routes>
     </div>
   )

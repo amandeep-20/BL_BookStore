@@ -15,7 +15,7 @@ const guest = (
             </NavLink>
         </div>
         <div className='flex flex-col items-start gap-2 w-full'>
-            <NavLink to={'/myOrder'}>
+            <NavLink to={'/guest'}>
                 <div className='flex items-center gap-2 text-sm text-[#878787] font-semibold'>
                     <div>
                         <IoBagOutline />
@@ -23,7 +23,7 @@ const guest = (
                     <p>My Orders</p>
                 </div>
             </NavLink>
-            <NavLink to={'/wishlist'}>
+            <NavLink to={'/guest'}>
                 <div className='flex items-center gap-2 text-sm text-[#878787] font-semibold'>
                     <div>
                         <IoMdHeartEmpty />
