@@ -1,13 +1,14 @@
 import React from "react";
 import Header from "../components/Same/Header";
 import Footer from "../components/Same/Footer";
+import Breadcrumbs from "../components/Same/Breadcrumbs";
 
 const UserProfile = () => {
   return (
     <div>
       <Header container="home" />
-
-      <div className="min-h-screen px-64 py-8 bg-white text-sm text-gray-800">
+      <div className="min-h-screen px-64 py-8 bg-white text-sm text-gray-800 ml-[150px]">
+        <Breadcrumbs container="profile" />
         {/* Section: Personal Details */}
         <div className="bg-white border border-gray-300 rounded p-6 mb-6 w-[512px]">
           <div className="flex justify-between items-center mb-4">
