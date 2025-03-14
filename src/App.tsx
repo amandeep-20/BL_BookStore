@@ -11,6 +11,7 @@ import WishList from './pages/WishList'
 import Cart from './pages/Cart'
 import UserProfile from './pages/UserProfile'
 import GuestView from './components/Same/GuestView'
+import OrderConfirm from './pages/OrderConfirm'
 const App = () => {
   return (
     <div>
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/profile' element={<UserProfile/>}/>
         <Route path='/guest' element={<GuestView />}/>
+        <Route path='/orderConfirm' element={<OrderConfirm />}/>
       </Routes>
     </div>
   )
