@@ -1,38 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
-
-const reviews = [
-  {
-    id: 1,
-    name: "Aniket Chile",
-    rating: 3,
-    review:
-      "Good product. Even though the translation could have been better, Chanakya's neeti are thought-provoking. Chanakya has written on many different topics and his writings are succinct.",
-  },
-  {
-    id: 2,
-    name: "Shweta Bodkar",
-    rating: 4,
-    review:
-      "Good product. Even though the translation could have been better, Chanakya's neeti are thought-provoking. Chanakya has written on many different topics and his writings are succinct.",
-  },
-];
+import { getBookReviews } from "../../Utils/API.js";
+import { useParams } from "react-router-dom";
+import FeedbackForm from "./FeedbackForm.js";
+import { L } from "vitest/dist/chunks/reporters.66aFHiyX.js";
 
 function Feedback() {
+  const { id: routeBookId } = useParams();
+  const [reviews, setReviews] = useState([]);
+  const bookId = routeBookId;
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const result = await getBookReviews(bookId);
+        setReviews(result);
+      } catch (error) {
+        console.error("Error fetching book reviews:", error);
+      }
+    };
+
+    if (bookId) {
+      fetchReviews();
+    }
+  }, [bookId]);
+
+  // Callback function to add new review to the list
+  const handleNewReview = (newReview) => {
+    setReviews(prevReviews => [...prevReviews, newReview]);
+  };
+  
+
   return (
-    <div className="mt-4">
+    <div>
+      <FeedbackForm bookId={bookId} onReviewSubmitted={handleNewReview} />
       {reviews.map((review) => (
-        <div className="flex gap-3 py-2 items-start" key={review.id}>   
-          {/* User Initials */}
+        <div className="flex gap-3 py-2 items-start" key={review._id}>
           <div className="w-20 h-10 bg-[#F5F5F5] flex items-center justify-center rounded-full">
             <p className="text-[#707070]">
-              {review.name.split(" ")[0].charAt(0).toUpperCase()}
-              {review.name.split(" ")[1].charAt(0).toUpperCase()}
+              {review.user_id.fullName.split(" ")[0].charAt(0).toUpperCase()}
+              {review.user_id.fullName.split(" ")[1]?.charAt(0).toUpperCase()}
             </p>
           </div>
-
           <div className="flex flex-col gap-1">
-            <p className="text-[#0A0102] font-semibold">{review.name}</p>
+            <p className="text-[#0A0102] font-semibold">{review.user_id.fullName}</p>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span key={star} className="text-xl">
@@ -44,7 +55,7 @@ function Feedback() {
                 </span>
               ))}
             </div>
-            <p className="text-sm text-[#707070]">{review.review}</p>
+            <p className="text-sm text-[#707070]">{review.comment}</p>
           </div>
         </div>
       ))}
