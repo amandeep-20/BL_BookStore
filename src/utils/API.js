@@ -11,9 +11,6 @@ export const loginApiCall = async (payload) => {
         const token = response.data.result.accessToken ;
         if (token) {
             localStorage.setItem('token', token);
-            console.log('Token stored:', token);
-        } else {
-            console.log('No token found in response');
         }
         
         const userName = response.data.result?.fullName || 
@@ -21,11 +18,7 @@ export const loginApiCall = async (payload) => {
         payload.email.split('@')[0];
         if (userName) {
             localStorage.setItem('userName', userName);
-            console.log('Username stored:', userName);
-        } else {
-            console.log('No username found in response');
-        }
-
+        } 
         return response.data;
     } catch (error) {
         console.error('Login error:', error.message);
@@ -160,7 +153,6 @@ export const removeWishlist = async (bookId) => {
                 "Content-Type": "application/json"
             }
         });
-        console.log("RESPONE IN API: ", response);
 
         return response;
     } catch (error) {
@@ -183,6 +175,81 @@ export const getWishlist = async (token) => {
       return response.data.result;
     } catch (error) {
       console.error('Failed to fetch books:', error);
+      throw error;
+    }
+  };
+
+  export const addToCart = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        throw new Error('No authentication token found. Please log in.');
+      }
+  
+      const response = await axios.post(
+        `https://bookstore.incubation.bridgelabz.com/bookstore_user/add_cart_item/${productId}`,
+        {},
+        {   
+          headers: {
+            "x-access-token": token,
+            "accept": "application/json",
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("Failed to add item to cart:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  export const getCartItems = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error('No authentication token found. Please log in.');
+      }
+  
+      const response = await axios.get(
+        'https://bookstore.incubation.bridgelabz.com/bookstore_user/get_cart_items',
+        {
+          headers: {
+            "x-access-token": token,
+            "accept": "application/json"
+          }
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch cart items:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  export const removeFromCart = async (cartItemId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error('No authentication token found. Please log in.');
+      }
+  
+      const response = await axios.delete(
+        `https://bookstore.incubation.bridgelabz.com/bookstore_user/remove_cart_item/${cartItemId}`,
+        {
+          headers: {
+            "x-access-token": token,
+            "accept": "application/json"
+          }
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("Failed to remove item from cart:", error.response?.data || error.message);
       throw error;
     }
   };

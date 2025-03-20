@@ -1,21 +1,48 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import bookImage from '../../assets/images/bookImage.png';
 import { FaHeart } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { FaMinus } from "react-icons/fa6";
 import { IoAdd } from "react-icons/io5";
 import Feedback from './Feedback';
-import { addWishlist, removeWishlist } from '../../utils/API.js';
+import { addWishlist, removeWishlist, getWishlist, addToCart } from '../../utils/API.js';
 
 function BookDetails() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { book } = location.state || {};
     const bookData = book || {};
     const [imageActive, setImageActive] = useState(0);
-    const [addToCart, setAddToCart] = useState(false);
+    const [addToCartState, setAddToCartState] = useState(false);
     const [cartCount, setCartCount] = useState(1);
-    const [isWishlisted, setIsWishlisted] = useState(false); // State to track if the book is wishlisted
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    
+    const fetchWishListStatus = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setIsWishlisted(false);
+                return;
+            }
+            const wishlist = await getWishlist(token);
+            const isBookWishlisted = wishlist.some(item => 
+                item._id === bookData._id || item === bookData._id
+            );
+            setIsWishlisted(isBookWishlisted);
+        } catch (error) {
+            console.log("error fetching wishlist:", error);
+            setIsWishlisted(false);
+        }
+    }
+
+    useEffect(() => {
+        if (bookData._id) {
+            fetchWishListStatus();
+        }
+    }, [bookData._id]);
 
     const incrementCart = () => {
         setCartCount(prevCount => prevCount + 1);
@@ -27,21 +54,52 @@ function BookDetails() {
         }
     };
 
-    // Handle wishlist toggle
+    const handleAddToCart = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await addToCart(bookData._id);
+            if (response.success) {
+                setAddToCartState(true);
+                navigate('/cart', {
+                    state: {
+                        cartItems: [{
+                            id: bookData._id,
+                            name: bookData.bookName,
+                            author: bookData.author,
+                            price: bookData.discountPrice,
+                            originalPrice: bookData.price,
+                            image: bookData.pic || bookImage,
+                            quantity: cartCount
+                        }]
+                    }
+                });
+            }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to add item to cart';
+            setError(errorMessage);
+            console.error('Error adding to cart:', err.response?.data || err);
+            if (errorMessage === 'No authentication token found. Please log in.' || err.response?.status === 401) {
+                navigate('/guest');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleWishlist = async () => {
         try {
             if (isWishlisted) {
-                const response = await removeWishlist(bookData._id); // Assuming bookData has an 'id' field
-                console.log("RESPONSE FROM REMOVE WISHLIST: ", response);
+                await removeWishlist(bookData._id); 
                 setIsWishlisted(false);
             } else {
-                console.log("BOOK DATA ID DETAILS PAGE: ", bookData._id);
-                const response = await addWishlist(bookData._id); // Call addWishlist with book ID
-                console.log("RESPONSE FROM ADD WISHLIST: ", response);
+                await addWishlist(bookData._id); 
                 setIsWishlisted(true);
             }
         } catch (error) {
             console.error("Wishlist operation failed:", error);
+            await fetchWishListStatus();
         }
     };
 
@@ -62,7 +120,7 @@ function BookDetails() {
                     </div>
                 </div>
                 <div className='flex xl:gap-2 ml-2 xl:ml-0 w-full space-x-2 justify-end p-2 md:p-4'>
-                    {addToCart ? (
+                    {addToCartState ? (
                         <div className='h-10 md:h-12 w-32 sm:w-36 md:w-40 flex items-center justify-between'>
                             <div onClick={decrementCart} className='cursor-pointer w-7 sm:w-8 md:w-9 h-7 sm:h-8 md:h-9 flex items-center justify-center bg-[#FAFAFA] border-[#DBDBDB] border-2 rounded-full'>
                                 <p className={`${cartCount === 1 ? "text-[#DBDBDB]" : "text-black"} text-base sm:text-lg`}><FaMinus /></p>
@@ -75,7 +133,13 @@ function BookDetails() {
                             </div>
                         </div>
                     ) : (
-                        <button onClick={() => setAddToCart(true)} className='h-10 md:h-12 w-32 sm:w-36 md:w-40 bg-[#A03037] text-white flex items-center justify-center'>ADD TO BAG</button>
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={isLoading}
+                            className={`h-10 md:h-12 w-32 sm:w-36 md:w-40 bg-[#A03037] text-white flex items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            {isLoading ? 'Adding...' : 'ADD TO CART'}
+                        </button>
                     )}
                     <div
                         onClick={handleWishlist}
@@ -109,6 +173,7 @@ function BookDetails() {
                 <div>
                     <Feedback />
                 </div>
+                {error && <p className="text-red-500 mt-4">{error}</p>}
             </div>
         </div>
     );

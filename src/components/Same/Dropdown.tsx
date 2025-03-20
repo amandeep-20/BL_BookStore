@@ -27,7 +27,7 @@ function Dropdown({ username: propUsername }: DropdownProps) {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('userName'); // Clear the userName from localStorage
+    localStorage.clear(); // Clear the userName from localStorage
     setUsername(''); // Reset the username state
   };
 

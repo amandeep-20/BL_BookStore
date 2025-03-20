@@ -7,23 +7,22 @@ import WishListContainer from '../components/Same/WishListContainer';
 
 function WishList() {
   const [wishlist, setWishlist] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); 
 
   // Function to fetch wishlist data
   const fetchWishlist = async () => {
     try {
-      setLoading(true); // Set loading to true before fetching
+      setLoading(true); 
       const token = localStorage.getItem('token');
       const data = await getWishlist(token);
       setWishlist(data);
     } catch (err: any) {
       console.error('Failed to fetch wishlist:', err);
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false); 
     }
   };
 
-  // Fetch wishlist on mount
   useEffect(() => {
     fetchWishlist();
   }, []);
