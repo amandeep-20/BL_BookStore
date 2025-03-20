@@ -35,11 +35,6 @@ function OrderConatiner({ order, container }: orderProps) {
             </div>
           </div>
         )}
-        {container === "wishlist" && (
-          <div>
-            <Trash2 className='text-[#9D9D9D] cursor-pointer' />
-          </div>
-        )}
       </div>
     </div>
   );

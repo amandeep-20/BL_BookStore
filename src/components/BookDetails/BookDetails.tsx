@@ -6,7 +6,7 @@ import { IoStar } from "react-icons/io5";
 import { FaMinus } from "react-icons/fa6";
 import { IoAdd } from "react-icons/io5";
 import Feedback from './Feedback';
-import { addWishlist, removeWishlist } from '../../utils/API.js'; // Import both add and remove wishlist functions
+import { addWishlist, removeWishlist } from '../../utils/API.js';
 
 function BookDetails() {
     const location = useLocation();
@@ -35,6 +35,7 @@ function BookDetails() {
                 console.log("RESPONSE FROM REMOVE WISHLIST: ", response);
                 setIsWishlisted(false);
             } else {
+                console.log("BOOK DATA ID DETAILS PAGE: ", bookData._id);
                 const response = await addWishlist(bookData._id); // Call addWishlist with book ID
                 console.log("RESPONSE FROM ADD WISHLIST: ", response);
                 setIsWishlisted(true);

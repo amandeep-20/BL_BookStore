@@ -142,8 +142,7 @@ export const addWishlist = async (bookId) => {
                 }
             }
         );
-
-        return response.data.result;
+        return response;
     } catch (error) {
         console.error("Wishlist Adding Failed", error);
         throw error;
@@ -161,10 +160,29 @@ export const removeWishlist = async (bookId) => {
                 "Content-Type": "application/json"
             }
         });
+        console.log("RESPONE IN API: ", response);
 
-        return response.data.result;
+        return response;
     } catch (error) {
         console.error("Wishlist Removal Failed", error);
         throw error;
     }
 };
+
+
+export const getWishlist = async (token) => {
+    try {
+      const response = await axios.get(
+        'https://bookstore.incubation.bridgelabz.com/bookstore_user/get_wishlist_items',{
+            headers: {
+                "x-access-token": token,
+                "Content-Type": "application/json"
+            },
+        }
+      );
+      return response.data.result;
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+      throw error;
+    }
+  };
