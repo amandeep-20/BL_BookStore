@@ -60,7 +60,6 @@ const CartData = () => {
           : item
       )
     );
-    // TODO: Add API call to update quantity on the server
   };
 
   const removeItem = async (id) => {
@@ -77,6 +76,34 @@ const CartData = () => {
       if (errorMessage === 'No authentication token found. Please log in.') {
         navigate('/login');
       }
+    }
+  };
+
+  // New function to clear cart
+  const clearCart = async () => {
+    try {
+      // Remove each item from the cart through API
+      const removePromises = items.map(item => removeFromCart(item.id));
+      await Promise.all(removePromises);
+      
+      // Clear items in UI
+      setItems([]);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to clear cart';
+      setError(errorMessage);
+      if (errorMessage === 'No authentication token found. Please log in.') {
+        navigate('/login');
+      }
+    }
+  };
+
+  // Modified checkout handler
+  const handleCheckout = async () => {
+    try {
+      await clearCart();
+      navigate('/orderConfirm');
+    } catch (err) {
+      console.error('Checkout failed:', err);
     }
   };
 
@@ -159,7 +186,7 @@ const CartData = () => {
             {/* Address Details Section */}
             <div className="border border-gray-300 p-4 sm:p-6 w-full bg-white rounded-md mt-5">
               <h2
-                className="text-lg font-semibold mb-4 cursor-pointer flex items-center justify-between"
+                className="text={isAddressVisible ? 'lg' : 'base'} font-semibold mb-4 cursor-pointer flex items-center justify-between"
                 onClick={toggleAddressVisibility}
               >
                 Customer Details
@@ -253,11 +280,11 @@ const CartData = () => {
                     <hr className="my-2" />
                     <div className="flex justify-between items-center font-bold text-lg">
                       <span>Total Amount</span>
-                      <div className="flex items-center gap-4">
+                      <div className="gap-4 md:flex items-center">
                         <span>Rs. {totalAmount}</span>
                         <button
                           className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-2 rounded hover:bg-blue-700"
-                          onClick={() => navigate('/orderConfirm')}
+                          onClick={handleCheckout}
                         >
                           CHECKOUT
                         </button>
