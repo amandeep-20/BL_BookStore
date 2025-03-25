@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bookCover from '../../assets/images/bookImage.png';
 import { FaPlus, FaMinus, FaMapMarkerAlt } from 'react-icons/fa';
-import { getCartItems, removeFromCart } from '../../Utils/API';
+import { getCartItems, removeFromCart } from '../../utils/API';
 
 const CartData = () => {
   const navigate = useNavigate();
@@ -79,14 +79,11 @@ const CartData = () => {
     }
   };
 
-  // New function to clear cart
   const clearCart = async () => {
     try {
-      // Remove each item from the cart through API
       const removePromises = items.map(item => removeFromCart(item.id));
       await Promise.all(removePromises);
       
-      // Clear items in UI
       setItems([]);
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'Failed to clear cart';
@@ -97,13 +94,12 @@ const CartData = () => {
     }
   };
 
-  // Modified checkout handler
   const handleCheckout = async () => {
     try {
       await clearCart();
       navigate('/orderConfirm');
     } catch (err) {
-      console.error('Checkout failed:', err);
+      throw(err);
     }
   };
 
@@ -119,7 +115,6 @@ const CartData = () => {
           <div className="text-center py-10 text-red-500">{error}</div>
         ) : (
           <>
-            {/* Cart Section */}
             <div className="border border-gray-300 p-4 sm:p-6 md:p-6 w-full bg-white rounded-md mt-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                 <h2 className="text-lg font-semibold mb-2 sm:mb-0">My cart ({items.length})</h2>
@@ -183,7 +178,6 @@ const CartData = () => {
               )}
             </div>
 
-            {/* Address Details Section */}
             <div className="border border-gray-300 p-4 sm:p-6 w-full bg-white rounded-md mt-5">
               <h2
                 className="text={isAddressVisible ? 'lg' : 'base'} font-semibold mb-4 cursor-pointer flex items-center justify-between"
@@ -254,7 +248,6 @@ const CartData = () => {
               )}
             </div>
 
-            {/* Order Summary Section */}
             {items.length > 0 && (
               <div className="border border-gray-300 p-4 sm:p-6 w-full bg-white rounded-md mt-10">
                 <h2

@@ -9,7 +9,6 @@ function WishList() {
   const [wishlist, setWishlist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true); 
 
-  // Function to fetch wishlist data
   const fetchWishlist = async () => {
     try {
       setLoading(true); 
@@ -17,7 +16,6 @@ function WishList() {
       const data = await getWishlist(token);
       setWishlist(data);
     } catch (err: any) {
-      console.error('Failed to fetch wishlist:', err);
     } finally {
       setLoading(false); 
     }
@@ -27,14 +25,12 @@ function WishList() {
     fetchWishlist();
   }, []);
 
-  // Handle removal of an item from the wishlist
   const handleRemoveFromWishlist = async (id: string) => {
     try {
       await removeWishlist(id);
       setWishlist((prevWishlist) => prevWishlist.filter((item) => item.product_id._id !== id));
       await fetchWishlist();
     } catch (err: any) {
-      console.error('Failed to remove item from wishlist:', err);
       await fetchWishlist();
     }
   };

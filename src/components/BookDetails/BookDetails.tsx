@@ -33,7 +33,6 @@ function BookDetails() {
             );
             setIsWishlisted(isBookWishlisted);
         } catch (error) {
-            console.log("error fetching wishlist:", error);
             setIsWishlisted(false);
         }
     }
@@ -79,7 +78,6 @@ function BookDetails() {
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Failed to add item to cart';
             setError(errorMessage);
-            console.error('Error adding to cart:', err.response?.data || err);
             if (errorMessage === 'No authentication token found. Please log in.' || err.response?.status === 401) {
                 navigate('/guest');
             }
@@ -98,7 +96,6 @@ function BookDetails() {
                 setIsWishlisted(true);
             }
         } catch (error) {
-            console.error("Wishlist operation failed:", error);
             await fetchWishListStatus();
         }
     };

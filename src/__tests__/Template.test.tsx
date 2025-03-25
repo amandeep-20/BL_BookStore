@@ -1,8 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen} from "@testing-library/react";
 import AuthTemplate from "../components/Auth/Template";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, test, expect } from "vitest";
-import { loginUser } from "../utils/API";
 import "@testing-library/jest-dom"; // Add this here instead
 
 vi.mock("../../utils/API", () => ({
@@ -48,18 +47,7 @@ describe("AuthTemplate component render", () => {
         );
 
         const passwordInput = screen.getByLabelText("Password") as HTMLInputElement;
-        // const toggleButton = screen.getByTestId("togglePassword");
 
         expect(passwordInput).toHaveAttribute("type", "password");
-
-        // fireEvent.click(toggleButton);
-        // await waitFor(() => {
-        //     expect(passwordInput).toHaveAttribute("type", "text");
-        // });
-
-        // fireEvent.click(toggleButton);
-        // await waitFor(() => {
-        //     expect(passwordInput).toHaveAttribute("type", "password");
-        // });
     });
 });

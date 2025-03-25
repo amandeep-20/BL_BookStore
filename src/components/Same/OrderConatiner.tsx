@@ -1,4 +1,4 @@
-import { Circle, Trash2} from "lucide-react";
+import { Circle} from "lucide-react";
 import React from "react";
 
 type orderProps = {

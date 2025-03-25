@@ -29,21 +29,17 @@ function FeedbackForm({ bookId, onReviewSubmitted }) {
 
         try {
             const response = await addBookReviews(reviewComment, rating, bookId);
-            console.log(response)
-            // Create a new review object with the assumed structure
             const newReview = {
-                _id: response._id || Date.now().toString(), // Use response ID if available, else temporary ID
+                _id: response._id || Date.now().toString(),
                 user_id: {
-                    fullName: "Current User", // This should ideally come from auth context or API response
+                    fullName: "Current User",
                 },
                 rating: rating,
                 comment: reviewComment
             };
 
-            // Call the callback to update parent component immediately
             onReviewSubmitted(newReview);
 
-            // Reset form
             setRating(0);
             setReviewComment("");
             setSubmitStatus("Review submitted successfully!");

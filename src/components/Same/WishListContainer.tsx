@@ -10,7 +10,7 @@ type orderProps = {
 
 function WishListContainer({ order, container, onRemove }: orderProps) {
   const handleRemove = () => {
-    onRemove(order.product_id._id); // Ensure this matches your data structure
+    onRemove(order.product_id._id); 
   };
 
   return (

@@ -6,32 +6,29 @@ import { Popover } from 'antd';
 import { NavLink } from 'react-router-dom';
 
 type DropdownProps = {
-  username?: string; // Add username as an optional prop
+  username?: string; 
 };
 
 function Dropdown({ username: propUsername }: DropdownProps) {
-  const [username, setUsername] = useState(propUsername || ''); // Use prop or fallback to local state
+  const [username, setUsername] = useState(propUsername || ''); 
 
-  // Sync local state with prop and check localStorage
   useEffect(() => {
     if (propUsername) {
       setUsername(propUsername);
     } else {
       const storedUsername = localStorage.getItem('userName');
       if (storedUsername) {
-        const displayName = storedUsername.split('5413')[0]; // Extract "amanr"
+        const displayName = storedUsername.split('5413')[0];
         setUsername(displayName);
       }
     }
   }, [propUsername]);
 
-  // Handle logout
   const handleLogout = () => {
-    localStorage.clear(); // Clear the userName from localStorage
-    setUsername(''); // Reset the username state
+    localStorage.clear(); 
+    setUsername('');
   };
 
-  // Dynamic loggedIn content based on username
   const loggedIn = (
     <div className='flex flex-col items-start gap-5 py-2 px-3 w-[200px]'>
       <div className='flex flex-col items-start gap-2 w-full'>
@@ -74,7 +71,6 @@ function Dropdown({ username: propUsername }: DropdownProps) {
     </div>
   );
 
-  // Guest content remains unchanged
   const guest = (
     <div className='flex flex-col items-start gap-5 p-3'>
       <div className='flex flex-col items-start gap-1 border-b-2 w-full pb-4'>
@@ -107,7 +103,6 @@ function Dropdown({ username: propUsername }: DropdownProps) {
     </div>
   );
 
-  // Determine which content to show
   const content = username ? loggedIn : guest;
 
   return (
@@ -117,7 +112,7 @@ function Dropdown({ username: propUsername }: DropdownProps) {
           <FaRegUser className='text-white text-xl' />
         </div>
         <p className='text-white hidden md:block text-xs mt-1'>
-          {username || 'Profile'} {/* Display username or fallback to "Profile" */}
+          {username || 'Profile'}
         </p>
       </div>
     </Popover>

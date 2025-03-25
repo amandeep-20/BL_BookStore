@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
-import { getBookReviews } from "../../Utils/API.js";
+import { getBookReviews } from "../../utils/API.js";
 import { useParams } from "react-router-dom";
 import FeedbackForm from "./FeedbackForm.js";
-import { L } from "vitest/dist/chunks/reporters.66aFHiyX.js";
 
 function Feedback() {
   const { id: routeBookId } = useParams();
@@ -16,7 +15,7 @@ function Feedback() {
         const result = await getBookReviews(bookId);
         setReviews(result);
       } catch (error) {
-        console.error("Error fetching book reviews:", error);
+        throw(error);
       }
     };
 
