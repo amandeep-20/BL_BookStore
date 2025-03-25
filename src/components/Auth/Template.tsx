@@ -13,7 +13,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!
 const phoneRegex = /^\d{10}$/;
 
 const InputField = ({ id, label, type, value, onChange, error, passwordVisible, togglePassword }) => (
-  <div className='flex flex-col items-center'>
+  <div className='flex flex-col items-center w-full'>
     <label className='text-xs font-normal self-start' htmlFor={id}>{label}</label>
     <div className='relative w-full'>
       <input
@@ -99,35 +99,35 @@ function Template({ container }: AuthTemplateProps) {
   };
 
   return (
-    <div className='flex items-center justify-center h-screen bg-[#9D9D9D]'>
-      <div className='sm:flex-col flex items-center justify-center w-screen md:relative mr-52'>
-        <div className='bg-[#F5F5F5] w-1/3 h-[391px] rounded-3xl shadow-xl flex flex-col space-y-6 align-center justify-center p-2'>
-          <div className='flex ml-12 align-center'>
-            <img className='rounded-full w-[55%]' src={loginSignUpImage} alt='login-signup-image' />
+    <div className='flex items-center justify-center min-h-screen bg-[#9D9D9D] p-4'>
+      <div className='flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-6 md:gap-0'>
+        <div className='bg-[#F5F5F5] w-full md:w-1/2 max-w-md h-auto min-h-[391px] rounded-3xl shadow-xl flex flex-col space-y-6 items-center justify-center p-4'>
+          <div className='flex justify-center'>
+            <img className='rounded-full w-3/4 max-w-[200px]' src={loginSignUpImage} alt='login-signup-image' />
           </div>
-          <div className='w-2/4 mrl-12 text-center'>
-            <p className='font-semibold text-[#0A0102] ml-6'>ONLINE BOOK SHOPPING</p>
+          <div className='text-center'>
+            <p className='font-semibold text-[#0A0102] text-lg'>ONLINE BOOK SHOPPING</p>
           </div>
         </div>
-        <div className='bg-[#F5F5F5] w-96 h-[440px] rounded-[7px] shadow-xl z-10 md:absolute right-[140px] px-3'>
+        <div className='bg-[#F5F5F5] w-full max-w-md h-auto rounded-[7px] shadow-xl p-4'>
           <div className='w-full'>
-            <div className='flex justify-center font-semibold text-2xl px-12 py-5 pb-0 space-x-14 mt-1'>
-              <div className='mr-8'>
+            <div className='flex justify-center font-semibold text-xl md:text-2xl py-5 pb-0 space-x-8 md:space-x-14'>
+              <div className='flex flex-col items-center'>
                 <NavLink to={'/'}>
                   <p className={`${container === "login" ? "text-black" : "text-[#878787]"} cursor-pointer`}>LOGIN</p>
-                  {container === "login" && <div className='border-b-[8px] rounded-xl ml-7 border-[#A03037] w-[32%] mt-1'></div>}
+                  {container === "login" && <div className='border-b-[6px] rounded-xl border-[#A03037] w-10 mt-1'></div>}
                 </NavLink>
               </div>
-              <div className='flex flex-col'>
+              <div className='flex flex-col items-center'>
                 <NavLink to={'/register'}>
                   <p className={`${container === "register" ? "text-black" : "text-[#878787]"} cursor-pointer`}>SIGNUP</p>
-                  {container === "register" && <div className='border-b-[8px] rounded-xl ml-8 border-[#A03037] w-[32%] mt-1'></div>}
+                  {container === "register" && <div className='border-b-[6px] rounded-xl border-[#A03037] w-10 mt-1'></div>}
                 </NavLink>
               </div>
             </div>
           </div>
-          <form className='w-full max-w-xs mx-auto' onSubmit={handleSubmit}>
-            <div className='flex w-full flex-col space-y-4 align-center justify-center px-7 py-3'>
+          <form className='w-full mt-4' onSubmit={handleSubmit}>
+            <div className='flex w-full flex-col space-y-4 px-4 py-3'>
               {container === "register" && (
                 <InputField
                   id="fullName"
@@ -177,12 +177,12 @@ function Template({ container }: AuthTemplateProps) {
               {container === "login" && (
                 <>
                   <div className='relative flex items-center justify-center my-3'>
-                    <div className='absolute border-t border-[#E1E4EA]-300 w-[80%]'></div>
-                    <p className='relative bg-white px-4 text-[#343434] font-bold text-lg z-10'>OR</p>
+                    <div className='absolute border-t border-[#E1E4EA] w-[80%]'></div>
+                    <p className='relative bg-[#F5F5F5] px-4 text-[#343434] font-bold text-lg z-10'>OR</p>
                   </div>
-                  <div className='flex justify-center space-x-4'>
-                    <button className='bg-[#4266B2] text-white text-xs w-[40%] py-3 rounded-sm'>Facebook</button>
-                    <button className='bg-[#E4E4E4] text-black text-xs w-[40%] py-3 rounded-sm'>Google</button>
+                  <div className='flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4'>
+                    <button className='bg-[#4266B2] text-white text-xs w-full sm:w-[40%] py-3 rounded-sm'>Facebook</button>
+                    <button className='bg-[#E4E4E4] text-black text-xs w-full sm:w-[40%] py-3 rounded-sm'>Google</button>
                   </div>
                 </>
               )}
