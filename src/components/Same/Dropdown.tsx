@@ -3,14 +3,17 @@ import { FaRegUser } from 'react-icons/fa6';
 import { IoBagOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { Popover } from 'antd';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type DropdownProps = {
   username?: string; 
 };
 
 function Dropdown({ username: propUsername }: DropdownProps) {
-  const [username, setUsername] = useState(propUsername || ''); 
+  const [username, setUsername] = useState(propUsername || '');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (propUsername) {
@@ -25,8 +28,17 @@ function Dropdown({ username: propUsername }: DropdownProps) {
   }, [propUsername]);
 
   const handleLogout = () => {
-    localStorage.clear(); 
+    localStorage.clear();
     setUsername('');
+    toast.success('Logged out successfully!', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    setTimeout(() => navigate('/'), 1000);
   };
 
   const loggedIn = (
@@ -59,14 +71,12 @@ function Dropdown({ username: propUsername }: DropdownProps) {
             <p>My Wishlist</p>
           </div>
         </NavLink>
-        <NavLink to={'/'}>
-          <button
-            onClick={handleLogout}
-            className='text-[#A03037] font-semibold border-[#A03037] border-2 text-sm py-1 px-9 mt-2'
-          >
-            Logout
-          </button>
-        </NavLink>
+        <button
+          onClick={handleLogout}
+          className='text-[#A03037] font-semibold border-[#A03037] border-2 text-sm py-1 px-9 mt-2'
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
@@ -106,16 +116,29 @@ function Dropdown({ username: propUsername }: DropdownProps) {
   const content = username ? loggedIn : guest;
 
   return (
-    <Popover placement="bottom" content={content} trigger={'click'}>
-      <div className='flex flex-col items-center justify-center cursor-pointer'>
-        <div className='flex items-center justify-center h-6'>
-          <FaRegUser className='text-white text-xl' />
+    <>
+      <ToastContainer 
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <Popover placement="bottom" content={content} trigger={'click'}>
+        <div className='flex flex-col items-center justify-center cursor-pointer'>
+          <div className='flex items-center justify-center h-6'>
+            <FaRegUser className='text-white text-xl' />
+          </div>
+          <p className='text-white hidden md:block text-xs mt-1'>
+            {username || 'Profile'}
+          </p>
         </div>
-        <p className='text-white hidden md:block text-xs mt-1'>
-          {username || 'Profile'}
-        </p>
-      </div>
-    </Popover>
+      </Popover>
+    </>
   );
 }
 

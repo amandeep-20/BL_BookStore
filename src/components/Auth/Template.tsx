@@ -3,6 +3,8 @@ import loginSignUpImage from '../../assets/images/loginSignupImage.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { IoEyeOff, IoEye } from "react-icons/io5";
 import { loginApiCall, signupApiCall } from '../../utils/API.js';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type AuthTemplateProps = {
   container: string;
@@ -91,7 +93,15 @@ function Template({ container }: AuthTemplateProps) {
           ? { email: formData.email, password: formData.password }
           : formData;
         await apiCall(payload);
-        navigate(container === 'login' ? '/home' : '/');
+        if (container === 'login') {
+          toast.success('Login Successful!', {
+            position: "top-right",
+            autoClose: 3000,
+          });
+          setTimeout(() => navigate('/home'), 1000);
+        } else {
+          navigate('/');
+        }
       } catch (err) {
         setError(prev => ({ ...prev, email: `${container} failed. ${container === 'signup' ? 'Email might already exist.' : 'Please check your credentials.'}` }));
       }
@@ -100,6 +110,7 @@ function Template({ container }: AuthTemplateProps) {
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-[#9D9D9D] p-4'>
+      <ToastContainer />
       <div className='flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-6 md:gap-0'>
         <div className='bg-[#F5F5F5] w-full md:w-1/2 max-w-md h-auto min-h-[391px] rounded-3xl shadow-xl flex flex-col space-y-6 items-center justify-center p-4'>
           <div className='flex justify-center'>

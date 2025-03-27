@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import bookImage from '../../assets/images/bookImage.png';
 import { FaHeart } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { FaMinus } from "react-icons/fa6";
-import { IoAdd } from "react-icons/io5";
 import Feedback from './Feedback';
 import { addWishlist, removeWishlist, getWishlist, addToCart } from '../../utils/API.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function BookDetails() {
     const location = useLocation();
@@ -61,25 +61,35 @@ function BookDetails() {
             const response = await addToCart(bookData._id);
             if (response.success) {
                 setAddToCartState(true);
-                navigate('/cart', {
-                    state: {
-                        cartItems: [{
-                            id: bookData._id,
-                            name: bookData.bookName,
-                            author: bookData.author,
-                            price: bookData.discountPrice,
-                            originalPrice: bookData.price,
-                            image: bookData.pic || bookImage,
-                            quantity: cartCount
-                        }]
-                    }
+                toast.success('Added to cart successfully!', {
+                    position: "top-right",
+                    autoClose: 2000,
                 });
+                setTimeout(() => {
+                    navigate('/cart', {
+                        state: {
+                            cartItems: [{
+                                id: bookData._id,
+                                name: bookData.bookName,
+                                author: bookData.author,
+                                price: bookData.discountPrice,
+                                originalPrice: bookData.price,
+                                image: bookData.pic || bookImage,
+                                quantity: cartCount
+                            }]
+                        }
+                    });
+                }, 1000);
             }
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Failed to add item to cart';
             setError(errorMessage);
+            toast.error(errorMessage, {
+                position: "top-right",
+                autoClose: 2000,
+            });
             if (errorMessage === 'No authentication token found. Please log in.' || err.response?.status === 401) {
-                navigate('/guest');
+                setTimeout(() => navigate('/guest'), 1000);
             }
         } finally {
             setIsLoading(false);
@@ -89,19 +99,32 @@ function BookDetails() {
     const handleWishlist = async () => {
         try {
             if (isWishlisted) {
-                await removeWishlist(bookData._id); 
+                await removeWishlist(bookData._id);
                 setIsWishlisted(false);
+                toast.success('Removed from wishlist!', {
+                    position: "top-right",
+                    autoClose: 2000,
+                });
             } else {
-                await addWishlist(bookData._id); 
+                await addWishlist(bookData._id);
                 setIsWishlisted(true);
+                toast.success('Added to wishlist!', {
+                    position: "top-right",
+                    autoClose: 2000,
+                });
             }
         } catch (error) {
             await fetchWishListStatus();
+            toast.error('Wishlist action failed!', {
+                position: "top-right",
+                autoClose: 2000,
+            });
         }
     };
 
     return (
         <div className='flex flex-col md:flex-row mt-6'>
+            <ToastContainer />
             <div className='md:w-[40%] flex-col'>
                 <div className='flex'>
                     <div>
@@ -119,15 +142,7 @@ function BookDetails() {
                 <div className='flex xl:gap-2 ml-2 xl:ml-0 w-full space-x-2 justify-end p-2 md:p-4'>
                     {addToCartState ? (
                         <div className='h-10 md:h-12 w-32 sm:w-36 md:w-40 flex items-center justify-between'>
-                            <div onClick={decrementCart} className='cursor-pointer w-7 sm:w-8 md:w-9 h-7 sm:h-8 md:h-9 flex items-center justify-center bg-[#FAFAFA] border-[#DBDBDB] border-2 rounded-full'>
-                                <p className={`${cartCount === 1 ? "text-[#DBDBDB]" : "text-black"} text-base sm:text-lg`}><FaMinus /></p>
-                            </div>
-                            <div className='w-8 sm:w-10 md:w-12 h-7 sm:h-8 md:h-9 select-none flex items-center justify-center bg-[#FAFAFA] border-[#DBDBDB] border-2'>
-                                <p className='text-lg sm:text-xl'>{cartCount}</p>
-                            </div>
-                            <div onClick={incrementCart} className='cursor-pointer w-7 sm:w-8 md:w-9 h-7 sm:h-8 md:h-9 flex items-center justify-center bg-[#FAFAFA] border-[#DBDBDB] border-2 rounded-full'>
-                                <p className='text-lg sm:text-xl'><IoAdd /></p>
-                            </div>
+                            
                         </div>
                     ) : (
                         <button
@@ -140,10 +155,10 @@ function BookDetails() {
                     )}
                     <div
                         onClick={handleWishlist}
-                        className='h-10 md:h-12 flex select-none items-center justify-center gap-1 sm:gap-2 md:gap-3 w-32 sm:w-36 md:w-40 bg-[#373434] cursor-pointer text-white hover:bg-[#4D4D4D]'
+                        className={`h-10 md:h-12 flex select-none items-center justify-center gap-1 sm:gap-2 md:gap-3 w-32 sm:w-36 md:w-40 ${isWishlisted ? 'bg-white border-2 border-[#A03037]' : 'bg-[#373434]'} cursor-pointer hover:bg-[#4D4D4D]`}
                     >
-                        <FaHeart className='text-white' />
-                        <p className='text-xs sm:text-sm md:text-base'>{isWishlisted ? "WISHLISTED" : "WISHLIST"}</p>
+                        <FaHeart className={isWishlisted ? 'text-[#A03037]' : 'text-white'} />
+                        <p className={`text-xs sm:text-sm md:text-base ${isWishlisted ? 'text-[#A03037]' : 'text-white'}`}>{isWishlisted ? "WISHLISTED" : "WISHLIST"}</p>
                     </div>
                 </div>
             </div>
