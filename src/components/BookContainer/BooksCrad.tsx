@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Books from "./Books";
 import BookCover1 from "../../assets/images/BookCover1.png";
@@ -10,43 +10,73 @@ import BookCover6 from "../../assets/images/BookCover6.png";
 import BookCover7 from "../../assets/images/BookCover7.png";
 import BookCover8 from "../../assets/images/BookCover8.png";
 import BookCover9 from "../../assets/images/BookCover9.png";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchBooks } from '../../redux/bookSlice';
-import { RootState } from '../../redux/store';
-import Shimmer from './Shimmer'; 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBooks } from "../../redux/bookSlice";
+import { RootState } from "../../redux/store";
+import Shimmer from "./Shimmer";
+import { SearchContext } from "../../context/SearchProvider"; // Import SearchContext
+
+const bookCovers = [
+  BookCover1, BookCover2, BookCover3, BookCover4,
+  BookCover5, BookCover6, BookCover7, BookCover8,
+  BookCover9,
+];
 
 const BooksCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const booksPerRow = 4; 
-  const rowsPerPage = 3; 
-  const booksPerPage = booksPerRow * rowsPerPage; 
-
-  const bookCovers = [
-    BookCover1, BookCover2, BookCover3, BookCover4,
-    BookCover5, BookCover6, BookCover7, BookCover8,
-    BookCover9
-  ];
+  const booksPerRow = 4;
+  const rowsPerPage = 3;
+  const booksPerPage = booksPerRow * rowsPerPage;
 
   const dispatch = useDispatch();
   const { allBooks: books, status, error } = useSelector((state: RootState) => state.books);
+  const { searchQuery, sortQuery }: any = useContext(SearchContext); // Use SearchContext
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (status === "idle") {
       dispatch(fetchBooks());
     }
   }, [status, dispatch]);
 
+  // Assign book covers to books
   const updatedBooks = books.map((book: any, index: number) => ({
     ...book,
-    pic: bookCovers[index % bookCovers.length]
+    pic: bookCovers[index % bookCovers.length],
   }));
 
-  const totalPages = Math.ceil(updatedBooks.length / booksPerPage);
+  // Sorting logic with useMemo
+  const sortedBooks = useMemo(() => {
+    let sortedArray = [...updatedBooks];
 
+    if (sortQuery === "highToLow") {
+      sortedArray.sort((a, b) => {
+        if (a.price === 0 && b.price !== 0) return 1;
+        if (b.price === 0 && a.price !== 0) return -1;
+        return b.price - a.price;
+      });
+    } else if (sortQuery === "lowToHigh") {
+      sortedArray.sort((a, b) => {
+        if (a.price === 0 && b.price !== 0) return 1;
+        if (b.price === 0 && a.price !== 0) return -1;
+        return a.price - b.price;
+      });
+    }
+    return sortedArray;
+  }, [sortQuery, updatedBooks]);
+
+  // Filtering logic with useMemo
+  const filteredBooks = useMemo(() => {
+    if (!searchQuery) return sortedBooks;
+    return sortedBooks.filter((book) =>
+      book.bookName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, sortedBooks]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
   const startIndex = (currentPage - 1) * booksPerPage;
   const endIndex = startIndex + booksPerPage;
-  const currentBooks = updatedBooks.slice(startIndex, endIndex);
+  const currentBooks = filteredBooks.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -135,7 +165,7 @@ const BooksCard = () => {
     return pages;
   };
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array(booksPerPage)
@@ -149,7 +179,7 @@ const BooksCard = () => {
     );
   }
 
-  if (status === 'failed') {
+  if (status === "failed") {
     return <div>Error: {error}</div>;
   }
 
@@ -165,11 +195,13 @@ const BooksCard = () => {
             </NavLink>
           ))
         ) : (
-          <div>No books available</div> 
+          <div className="col-span-full text-center text-[#A03037] font-semibold text-lg">
+            No books available
+          </div>
         )}
       </div>
 
-      {totalPages > 1 && updatedBooks.length > 0 && (
+      {totalPages > 1 && filteredBooks.length > 0 && (
         <div className="flex justify-center items-center mt-6">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
