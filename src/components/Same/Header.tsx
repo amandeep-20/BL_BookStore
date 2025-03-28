@@ -5,15 +5,22 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../Same/Dropdown";
 import { NavLink } from "react-router-dom";
-import { getCartItems } from "../../utils/API"; 
+import { getCartItems } from "../../utils/API";
 
-type headerProps = {
+// Define the expected shape of cart item
+interface CartItem {
+  quantityToBuy: number;
+  // Add other properties if they exist in your API response
+}
+
+// Define props type
+type HeaderProps = {
   container?: string;
 };
 
-const Header = ({ container }: headerProps) => {
+const Header = ({ container }: HeaderProps) => {
   const [username, setUsername] = useState("");
-  const [cartCount, setCartCount] = useState(0); 
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("userName");
@@ -28,10 +35,13 @@ const Header = ({ container }: headerProps) => {
       try {
         const response = await getCartItems();
         if (response.success) {
-          const cartItems = response.result.map(item => ({
-            quantity: item.quantityToBuy
+          const cartItems = response.result.map((item: CartItem) => ({
+            quantity: item.quantityToBuy,
           }));
-          const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+          const totalCount = cartItems.reduce(
+            (sum: number, item: { quantity: number }) => sum + item.quantity,
+            0
+          );
           setCartCount(totalCount);
         }
       } catch (err) {
@@ -40,7 +50,7 @@ const Header = ({ container }: headerProps) => {
     };
 
     fetchCartCount();
-  }, []); 
+  }, []);
 
   return (
     <div className="w-full bg-[#A03037]">

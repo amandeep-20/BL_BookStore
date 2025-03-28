@@ -9,7 +9,7 @@
     "strict": true,
     "noImplicitAny": true,
     "baseUrl": "src",
-    "types": ["jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom","node"],
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
