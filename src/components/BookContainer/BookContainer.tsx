@@ -76,7 +76,7 @@ const BookContainer = () => {
                 </div>
             </div>
             <div className='mt-4 min-h-[70vh]'>
-                <BooksCard /> {/* Pass filtered books to BooksCard */}
+                <BooksCard books={filteredBooks} /> {/* Pass filtered books to BooksCard */}
             </div>
         </div>
     );

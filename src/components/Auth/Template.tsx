@@ -100,7 +100,7 @@ function Template({ container }: AuthTemplateProps) {
           });
           setTimeout(() => navigate('/home'), 1000);
         } else {
-          navigate('/');
+          navigate('/login');
         }
       } catch (err) {
         setError(prev => ({ ...prev, email: `${container} failed. ${container === 'signup' ? 'Email might already exist.' : 'Please check your credentials.'}` }));
@@ -124,7 +124,7 @@ function Template({ container }: AuthTemplateProps) {
           <div className='w-full'>
             <div className='flex justify-center font-semibold text-xl md:text-2xl py-5 pb-0 space-x-8 md:space-x-14'>
               <div className='flex flex-col items-center'>
-                <NavLink to={'/'}>
+                <NavLink to={'/login'}>
                   <p className={`${container === "login" ? "text-black" : "text-[#878787]"} cursor-pointer`}>LOGIN</p>
                   {container === "login" && <div className='border-b-[6px] rounded-xl border-[#A03037] w-10 mt-1'></div>}
                 </NavLink>

@@ -38,7 +38,7 @@ function Dropdown({ username: propUsername }: DropdownProps) {
       pauseOnHover: true,
       draggable: true,
     });
-    setTimeout(() => navigate('/'), 1000);
+    setTimeout(() => navigate('/login'), 1000);
   };
 
   const loggedIn = (
@@ -86,7 +86,7 @@ function Dropdown({ username: propUsername }: DropdownProps) {
       <div className='flex flex-col items-start gap-1 border-b-2 w-full pb-4'>
         <p className='font-semibold text-sm'>Welcome</p>
         <p className='text-[#878787] font-semibold'>To access account and manage orders</p>
-        <NavLink to={'/'}>
+        <NavLink to={'/login'}>
           <button className='text-[#A03037] font-semibold border-[#A03037] border-2 text-sm py-1 px-4 mt-2'>
             LOGIN/SIGNUP
           </button>
