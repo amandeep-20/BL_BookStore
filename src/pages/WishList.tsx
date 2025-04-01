@@ -14,11 +14,11 @@ function WishList() {
       setLoading(true);
       const token = localStorage.getItem('token');
       const data = await getWishlist(token);
-      console.log("Fetched wishlist:", data); // Debug the response
-      setWishlist(data || []); // Ensure we set an array even if data is null
+      console.log("Fetched wishlist:", data); 
+      setWishlist(data || []); 
     } catch (err: any) {
       console.error("Error fetching wishlist:", err);
-      setWishlist([]); // Set empty array on error to prevent crashes
+      setWishlist([]); 
     } finally {
       setLoading(false);
     }
@@ -30,15 +30,15 @@ function WishList() {
 
   const handleRemoveFromWishlist = async (id: string) => {
     try {
-      setLoading(true); // Show loading state during removal
+      setLoading(true);
       await removeWishlist(id);
-      console.log("Item removed with ID:", id); // Debug the removal
-      await fetchWishlist(); // Refetch to ensure state matches server
+      console.log("Item removed with ID:", id);
+      await fetchWishlist(); 
     } catch (err: any) {
       console.error("Error removing from wishlist:", err);
-      await fetchWishlist(); // Refetch even on error to recover
+      await fetchWishlist(); 
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false); 
     }
   };
 
@@ -57,7 +57,7 @@ function WishList() {
             <p className="p-4">Your wishlist is empty.</p>
           ) : (
             wishlist.map((item, index) => (
-              <div key={item.product_id?._id || index}> {/* Use unique ID if available */}
+              <div key={item.product_id?._id || index}>
                 <WishListContainer
                   order={item}
                   container="wishlist"
