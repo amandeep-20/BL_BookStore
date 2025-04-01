@@ -78,7 +78,15 @@ export const getAllBooks = async (): Promise<any[]> => {
     );
     return response.data.result;
   } catch (error) {
-    throw error;
+    console.error("Main API failed to fetch books:", error);
+    try {
+      const proxyResponse = await axios.get(
+        "http://localhost:3001/bookList"
+      );
+      return proxyResponse.data;
+    } catch (proxyError) {
+      throw proxyError;
+    }
   }
 };
 
