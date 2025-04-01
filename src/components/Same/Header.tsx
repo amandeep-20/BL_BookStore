@@ -7,13 +7,10 @@ import Dropdown from "../Same/Dropdown";
 import { NavLink } from "react-router-dom";
 import { getCartItems } from "../../utils/API";
 
-// Define the expected shape of cart item
 interface CartItem {
   quantityToBuy: number;
-  // Add other properties if they exist in your API response
 }
 
-// Define props type
 type HeaderProps = {
   container?: string;
 };

@@ -1,19 +1,17 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import React from 'react';
-import Header from '../components/Same/Header'; // Adjust path as needed
-import * as API from '../utils/API'; // Adjust path as needed
+import Header from '../components/Same/Header'; 
+import * as API from '../utils/API'; 
 
-// Mock the Dropdown component
-jest.mock('../components/Same/Dropdown.tsx', () => jest.fn(() => <div data-testid="mock-dropdown">Dropdown</div>));
+jest.mock('../components/Same/Dropdown.tsx', () => jest.fn(({ username }) => (
+  <div data-testid="mock-dropdown">{username}</div>
+)));
 
-// Mock the API call
 jest.mock('../utils/API.ts', () => ({
   getCartItems: jest.fn(),
 }));
 
-// Mock the logo import
 jest.mock('../assets/images/education.svg', () => 'mocked-logo-path');
 
 describe('Header Component Tests', () => {
@@ -33,7 +31,7 @@ describe('Header Component Tests', () => {
     expect(screen.getByAltText('logo-img')).toHaveAttribute('src', 'mocked-logo-path');
   });
 
-  it('shows search bar when container is "home"', () => {
+  it('shows search bar when container is "home" on desktop', () => {
     render(
       <MemoryRouter>
         <Header container="home" />
@@ -41,12 +39,25 @@ describe('Header Component Tests', () => {
     );
 
     expect(screen.getByPlaceholderText(/search.../i)).toBeInTheDocument();
+    expect(screen.getByTestId('mock-dropdown')).toBeInTheDocument();
+  });
+
+  it('shows mobile search icon when container is "home"', () => {
+    render(
+      <MemoryRouter>
+        <Header container="home" />
+      </MemoryRouter>
+    );
+
+    const mobileSearchContainer = screen.getByText('Search').parentElement;
+    expect(mobileSearchContainer?.querySelector('svg')).toHaveClass('text-white');
+    expect(mobileSearchContainer?.querySelector('svg')).toHaveClass('text-xl');
   });
 
   it('does not render search bar, cart, or dropdown when container is not "home"', () => {
     render(
       <MemoryRouter>
-        <Header />
+        <Header container="other" />
       </MemoryRouter>
     );
 
@@ -67,6 +78,32 @@ describe('Header Component Tests', () => {
     expect(searchInput).toHaveValue('test book');
   });
 
+  it('displays username from localStorage correctly', async () => {
+    localStorage.setItem('userName', 'John5413Doe');
+    
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Header container="home" />
+        </MemoryRouter>
+      );
+    });
+
+    expect(screen.getByTestId('mock-dropdown')).toHaveTextContent('John');
+  });
+
+  it('handles empty localStorage username', async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Header container="home" />
+        </MemoryRouter>
+      );
+    });
+
+    expect(screen.getByTestId('mock-dropdown')).toHaveTextContent('');
+  });
+
   it('displays cart count when API returns items', async () => {
     (API.getCartItems as jest.Mock).mockResolvedValue({
       success: true,
@@ -81,8 +118,7 @@ describe('Header Component Tests', () => {
       );
     });
 
-    const cartCount = await screen.findByText('5');
-    expect(cartCount).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
     expect(API.getCartItems).toHaveBeenCalledTimes(1);
   });
 
@@ -101,14 +137,22 @@ describe('Header Component Tests', () => {
     expect(API.getCartItems).toHaveBeenCalledTimes(1);
   });
 
-  it('renders cart icon and link correctly', () => {
-    render(
-      <MemoryRouter>
-        <Header container="home" />
-      </MemoryRouter>
-    );
+  it('renders cart icon and link correctly with zero count', async () => {
+    (API.getCartItems as jest.Mock).mockResolvedValue({
+      success: true,
+      result: [],
+    });
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Header container="home" />
+        </MemoryRouter>
+      );
+    });
 
     const cartLink = screen.getByRole('link', { name: /cart/i });
     expect(cartLink).toHaveAttribute('href', '/cart');
+    expect(screen.queryByText(/[1-9]/)).not.toBeInTheDocument();
   });
 });

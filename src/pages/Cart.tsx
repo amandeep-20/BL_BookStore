@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
 import Header from '../components/Same/Header';
 import Footer from '../components/Same/Footer';
 import Breadcrumbs from '../components/Same/Breadcrumbs';
-import CartData from '../components/Cart/CartData.js'
+import CartData from '../components/Cart/CartData'
 const Cart = () => {
   return (
     <div>

@@ -36,12 +36,13 @@ function WishListContainer({ order, container, onRemove }: orderProps) {
       </div>
       <div>
         {container === "wishlist" && (
-          <div
+          <button
+            data-testid="remove-button-container"
             onClick={handleRemove}
             className="text-[#9D9D9D] cursor-pointer hover:text-red-500"
           >
             <Trash2 />
-          </div>
+          </button>
         )}
       </div>
     </div>
