@@ -10,7 +10,11 @@ type orderProps = {
 
 function WishListContainer({ order, container, onRemove }: orderProps) {
   const handleRemove = () => {
-    onRemove(order.product_id._id); 
+    if (order.product_id?._id) {
+      onRemove(order.product_id._id); // Only call onRemove if ID exists
+    } else {
+      console.warn("No valid product ID found for removal");
+    }
   };
 
   return (
@@ -24,24 +28,27 @@ function WishListContainer({ order, container, onRemove }: orderProps) {
           <img className="w-[65px]" src={bookImage} alt="order-cover-image" />
         </div>
         <div>
-          <p className="text-lg">{order.product_id.bookName}</p>
-          <p className="text-[#9D9D9D] text-xs">{order.product_id.author}</p>
+          <p className="text-lg">{order.product_id?.bookName || "Unknown Book"}</p>
+          <p className="text-[#9D9D9D] text-xs">{order.product_id?.author || "Unknown Author"}</p>
           <div className="mt-1 flex items-center space-x-2">
-            <p className="font-semibold">Rs. {order.product_id.discountPrice}</p>
+            <p className="font-semibold">
+              Rs. {order.product_id?.discountPrice || "N/A"}
+            </p>
             <p className="text-[#878787] text-xs line-through">
-              Rs. {order.product_id.price}
+              Rs. {order.product_id?.price || "N/A"}
             </p>
           </div>
         </div>
       </div>
       <div>
         {container === "wishlist" && (
-          <div
+          <button
             onClick={handleRemove}
             className="text-[#9D9D9D] cursor-pointer hover:text-red-500"
+            aria-label="Remove from wishlist"
           >
             <Trash2 />
-          </div>
+          </button>
         )}
       </div>
     </div>
