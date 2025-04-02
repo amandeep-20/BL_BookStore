@@ -8,17 +8,17 @@ import BooksCard from './BooksCrad';
 const items: MenuProps['items'] = [
     {
         label: (
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <button style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}>
                 First menu item
-            </a>
+            </button>
         ),
         key: '0',
     },
     {
         label: (
-            <a href="#" target="_blank" rel="noopener noreferrer">
-                sec menu item
-            </a>
+            <button style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}>
+                Second menu item
+            </button>
         ),
         key: '1',
     },
@@ -41,12 +41,12 @@ const BookContainer = () => {
                 </div>
                 <div className='cursor-pointer border-2 border-black-600 w-40 flex items-center justify-center py-1 px-2'>
                     <Dropdown menu={{ items }} trigger={['click']}>
-                        <a onClick={(e) => e.preventDefault()}>
+                        <button onClick={(e) => e.preventDefault()}>
                             <Space className='flex justify-between items-center w-full'>
                                 <p className='text-xs font-semibold'>Sort by relevance</p>
                                 <DownOutlined />
                             </Space>
-                        </a>
+                        </button>
                     </Dropdown>
                 </div>
             </div>

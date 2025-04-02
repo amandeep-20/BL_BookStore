@@ -5,6 +5,7 @@ import Breadcrumbs from '../components/Same/Breadcrumbs'
 import bookCover from '../assets/images/bookImage.png'
 import bookCover2 from '../assets/images/bookImage2.png'
 import OrderConatiner from '../components/Same/OrderConatiner'
+import { v4 as uuidv4 } from 'uuid'
 
 const order = [
     {
@@ -30,9 +31,9 @@ function MyOrder() {
             <div className='min-h-[83.75vh] max-w-6xl p-5 mx-auto flex flex-col gap-2 mt-2'>
                 <Breadcrumbs container='myOrder'/>
                 {
-                    order.map((order, index) => {
+                    order.map((order) => {
                         return (
-                            <div key={index} className='py-2'>
+                            <div key={uuidv4()} className='py-2'>
                                 <OrderConatiner order={order} container='myOrder' />
                             </div>
                         )

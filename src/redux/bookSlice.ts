@@ -45,7 +45,7 @@ const bookSlice = createSlice({
             })
             .addCase(fetchBooks.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message || "Something went wrong";
+                state.error = action.error.message ?? "Something went wrong";
             });
     },
 });

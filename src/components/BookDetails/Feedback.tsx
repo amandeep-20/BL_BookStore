@@ -4,35 +4,14 @@ import { getBookReviews } from "../../utils/API.js";
 import { useParams } from "react-router-dom";
 import FeedbackForm from "./FeedbackForm.js";
 
-function Feedback() {
-  const { id: routeBookId } = useParams();
-  const [reviews, setReviews] = useState([]);
-  const bookId = routeBookId;
-
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const result = await getBookReviews(bookId);
-        setReviews(result);
-      } catch (error) {
-        throw(error);
-      }
-    };
-
-    if (bookId) {
-      fetchReviews();
-    }
-  }, [bookId]);
-
-  // Callback function to add new review to the list
-  const handleNewReview = (newReview) => {
-    setReviews(prevReviews => [...prevReviews, newReview]);
-  };
-  
+// New component to handle reviews rendering
+const ReviewsList = ({ reviews }) => {
+  if (reviews.length === 0) {
+    return <p className="text-[#707070] text-center">No reviews yet.</p>;
+  }
 
   return (
-    <div>
-      <FeedbackForm bookId={bookId} onReviewSubmitted={handleNewReview} />
+    <>
       {reviews.map((review) => (
         <div className="flex gap-3 py-2 items-start" key={review._id}>
           <div className="w-20 h-10 bg-[#F5F5F5] flex items-center justify-center rounded-full">
@@ -58,6 +37,44 @@ function Feedback() {
           </div>
         </div>
       ))}
+    </>
+  );
+};
+
+function Feedback() {
+  const { id: routeBookId } = useParams();
+  const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState(null);
+  const bookId = routeBookId;
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const result = await getBookReviews(bookId);
+        setReviews(result);
+      } catch (error) {
+        setError("Failed to load reviews. Please try again later.");
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    if (bookId) {
+      fetchReviews();
+    }
+  }, [bookId]);
+
+  const handleNewReview = (newReview) => {
+    setReviews((prevReviews) => [...prevReviews, newReview]);
+  };
+
+  return (
+    <div>
+      <FeedbackForm bookId={bookId} onReviewSubmitted={handleNewReview} />
+      {error ? (
+        <p className="text-red-500 text-center">{error}</p>
+      ) : (
+        <ReviewsList reviews={reviews} />
+      )}
     </div>
   );
 }

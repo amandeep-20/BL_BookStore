@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/32</span>
+                <span class='fraction'>24/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -112,7 +112,7 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,7 +129,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,8 +159,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
-<span class="cstat-no" title="statement not covered" >import { IoStar } from 'react-icons/io5';</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
+import { IoStar } from 'react-icons/io5';
 &nbsp;
 type BookType = {
   bookName: string;
@@ -173,48 +173,48 @@ type BookType = {
 };
 &nbsp;
 type BookProps = {
-  book: BookType;
+  readonly book: BookType;
 };
 &nbsp;
-function <span class="fstat-no" title="function not covered" >Books(</span>{ book }: BookProps) {
-<span class="cstat-no" title="statement not covered" >  return (</span>
+function Books({ book }: BookProps) {
+  return (
     &lt;div className='flex flex-col w-full max-w-[240px] h-[275px] border border-gray-300 hover:shadow-lg'&gt;
       &lt;div className='w-full h-[172px] flex items-center justify-center bg-[#F5F5F5]'&gt;
         &lt;img
           loading='lazy'
           className='w-24 object-contain'
-          src={book?.pic}
-          alt={book?.bookName}
+          src={book<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ic}
+          alt={book<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ookName}
         /&gt;
       &lt;/div&gt;
       &lt;div className='w-full p-4'&gt;
-        &lt;p className='text-md font-semibold'&gt;{book?.bookName}&lt;/p&gt;
-        &lt;p className='text-[#878787] text-xs font-normal mb-1'&gt;by {book?.author}&lt;/p&gt;
+        &lt;p className='text-md font-semibold'&gt;{book<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ookName}&lt;/p&gt;
+        &lt;p className='text-[#878787] text-xs font-normal mb-1'&gt;by {book<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>uthor}&lt;/p&gt;
         &lt;div className='flex text-xs items-center gap-1'&gt;
           &lt;div className='flex h-5 px-1 items-center justify-center text-white text-xs bg-[#388E3C]'&gt;
-            &lt;span&gt;{book?.rating}4.5
+            &lt;span&gt;{book<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>ating}4.5
             &lt;/span&gt;
             &lt;IoStar className='text-white text-xs ml-0.5' /&gt;
           &lt;/div&gt;
-          &lt;p className='text-[#878787]'&gt;({book?.quantity})&lt;/p&gt;
+          &lt;p className='text-[#878787]'&gt;({book<span class="branch-0 cbranch-no" title="branch not covered" >?.q</span>uantity})&lt;/p&gt;
         &lt;/div&gt;
         &lt;div className='mt-1 flex items-center space-x-2'&gt;
-          &lt;p className='font-semibold'&gt;Rs. {book?.discountPrice}&lt;/p&gt;
-          &lt;p className='text-[#878787] text-xs line-through'&gt;Rs. {book?.price}&lt;/p&gt;
+          &lt;p className='font-semibold'&gt;Rs. {book<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>iscountPrice}&lt;/p&gt;
+          &lt;p className='text-[#878787] text-xs line-through'&gt;Rs. {book<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>rice}&lt;/p&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
   );
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default Books;</span></pre></td></tr></table></pre>
+export default Books;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-01T08:21:15.666Z
+                at 2025-04-02T06:00:24.102Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

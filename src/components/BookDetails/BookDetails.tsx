@@ -35,23 +35,13 @@ function BookDetails() {
         } catch (error) {
             setIsWishlisted(false);
         }
-    }
+    };
 
     useEffect(() => {
         if (bookData._id) {
             fetchWishListStatus();
         }
     }, [bookData._id]);
-
-    const incrementCart = () => {
-        setCartCount(prevCount => prevCount + 1);
-    };
-
-    const decrementCart = () => {
-        if (cartCount > 1) {
-            setCartCount(prevCount => prevCount - 1);
-        }
-    };
 
     const handleAddToCart = async () => {
         setIsLoading(true);
@@ -128,12 +118,12 @@ function BookDetails() {
             <div className='md:w-[40%] flex-col'>
                 <div className='flex'>
                     <div>
-                        <div onClick={() => setImageActive(0)} className={`cursor-pointer h-[68px] p-2 flex justify-center items-center border-2 ${imageActive === 0 ? 'border-red-500' : 'border-[#E0E0E0]'}`}>
+                        <button onClick={() => setImageActive(0)} className={`cursor-pointer h-[68px] p-2 flex justify-center items-center border-2 ${imageActive === 0 ? 'border-red-500' : 'border-[#E0E0E0]'}`}>
                             <img className='w-10' src={bookData.pic} alt='book-image-1' />
-                        </div>
-                        <div onClick={() => setImageActive(1)} className={`cursor-pointer h-[68px] p-2 flex justify-center items-center border-2 ${imageActive === 1 ? 'border-red-500' : 'border-[#E0E0E0]'}`}>
+                        </button>
+                        <button onClick={() => setImageActive(1)} className={`cursor-pointer h-[68px] p-2 flex justify-center items-center border-2 ${imageActive === 1 ? 'border-red-500' : 'border-[#E0E0E0]'}`}>
                             <img className='w-10' src={bookImage} alt='book-image-2' />
-                        </div>
+                        </button>
                     </div>
                     <div className='w-[82%] flex-col justify-center items-center p-8 h-auto border-2 border-[#E0E0E0]'>
                         <img className='w-72' src={imageActive ? bookImage : bookData.pic} alt={bookData.bookName} />
@@ -142,7 +132,19 @@ function BookDetails() {
                 <div className='flex xl:gap-2 ml-2 xl:ml-0 w-full space-x-2 justify-end p-2 md:p-4'>
                     {addToCartState ? (
                         <div className='h-10 md:h-12 w-32 sm:w-36 md:w-40 flex items-center justify-between'>
-                            
+                            <button
+                                onClick={() => cartCount > 1 && setCartCount(prevCount => prevCount - 1)}
+                                className='w-8 h-8 flex items-center justify-center bg-gray-200'
+                            >
+                                -
+                            </button>
+                            <span className='text-lg'>{cartCount}</span>
+                            <button
+                                onClick={() => setCartCount(prevCount => prevCount + 1)}
+                                className='w-8 h-8 flex items-center justify-center bg-gray-200'
+                            >
+                                +
+                            </button>
                         </div>
                     ) : (
                         <button
@@ -153,13 +155,13 @@ function BookDetails() {
                             {isLoading ? 'Adding...' : 'ADD TO CART'}
                         </button>
                     )}
-                    <div
+                    <button
                         onClick={handleWishlist}
                         className={`h-10 md:h-12 flex select-none items-center justify-center gap-1 sm:gap-2 md:gap-3 w-32 sm:w-36 md:w-40 ${isWishlisted ? 'bg-white border-2 border-[#A03037]' : 'bg-[#373434]'} cursor-pointer hover:bg-[#4D4D4D]`}
                     >
                         <FaHeart className={isWishlisted ? 'text-[#A03037]' : 'text-white'} />
                         <p className={`text-xs sm:text-sm md:text-base ${isWishlisted ? 'text-[#A03037]' : 'text-white'}`}>{isWishlisted ? "WISHLISTED" : "WISHLIST"}</p>
-                    </div>
+                    </button>
                 </div>
             </div>
             <div className='md:w-[60%] flex flex-col gap-6 ml-6'>

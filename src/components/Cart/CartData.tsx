@@ -4,34 +4,64 @@ import bookCover from '../../assets/images/bookImage.png';
 import { FaPlus, FaMinus, FaMapMarkerAlt } from 'react-icons/fa';
 import { getCartItems, removeFromCart } from '../../utils/API';
 
+// Define the Item interface with all required properties
+interface Item {
+  id: string; // Changed to string to match removeFromCart expectation
+  quantity: number;
+  name: string;
+  author: string;
+  price: number;
+  originalPrice: number;
+  image: string;
+}
+
+// Define the API response type (adjust based on your actual API response structure)
+interface CartItemResponse {
+  _id: string;
+  product_id: {
+    bookName: string;
+    author: string;
+    discountPrice: number;
+    price: number;
+    bookImage?: string;
+  };
+  quantityToBuy: number;
+}
+
+interface ApiResponse {
+  success: boolean;
+  result: CartItemResponse[];
+  message?: string;
+}
+
 const CartData = () => {
   const navigate = useNavigate();
   const [isAddressVisible, setIsAddressVisible] = useState(false);
   const [isOrderSummaryVisible, setIsOrderSummaryVisible] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCartItems = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await getCartItems();
+        const response = await getCartItems() as ApiResponse;
         if (response.success) {
-          const cartItems = response.result.map(item => ({
+          const cartItems = response.result.map((item: CartItemResponse) => ({
             id: item._id,
             name: item.product_id.bookName,
             author: item.product_id.author,
             price: item.product_id.discountPrice,
             originalPrice: item.product_id.price,
-            image: item.product_id.bookImage || bookCover,
-            quantity: item.quantityToBuy
+            image: item.product_id.bookImage ?? bookCover,
+            quantity: item.quantityToBuy,
           }));
           setItems(cartItems);
         }
-      } catch (err) {
-        const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch cart items';
+      } catch (err: unknown) {
+        const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Failed to fetch cart items';
         setError(errorMessage);
         if (errorMessage === 'No authentication token found. Please log in.') {
           navigate('/login');
@@ -47,12 +77,7 @@ const CartData = () => {
   const toggleAddressVisibility = () => setIsAddressVisible(!isAddressVisible);
   const toggleOrderSummaryVisibility = () => setIsOrderSummaryVisible(!isOrderSummaryVisible);
 
-  interface Item {
-    id: number | string;
-    quantity: number;
-  }
-  
-  const updateQuantity = (id: Item['id'], delta: number): void => {
+  const updateQuantity = (id: string, delta: number): void => {
     setItems((prevItems: Item[]) =>
       prevItems.map((item: Item) =>
         item.id === id && (item.quantity + delta > 0)
@@ -62,16 +87,16 @@ const CartData = () => {
     );
   };
 
-  const removeItem = async (id) => {
+  const removeItem = async (id: string) => {
     try {
-      const response = await removeFromCart(id);
+      const response = await removeFromCart(id) as ApiResponse;
       if (response.success) {
         setItems(prevItems => prevItems.filter(item => item.id !== id));
       } else {
-        setError(response.message || 'Failed to remove item from cart');
+        setError(response.message ?? 'Failed to remove item from cart');
       }
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to remove item from cart';
+    } catch (err: unknown) {
+      const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Failed to remove item from cart';
       setError(errorMessage);
       if (errorMessage === 'No authentication token found. Please log in.') {
         navigate('/login');
@@ -83,10 +108,9 @@ const CartData = () => {
     try {
       const removePromises = items.map(item => removeFromCart(item.id));
       await Promise.all(removePromises);
-      
       setItems([]);
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to clear cart';
+    } catch (err: unknown) {
+      const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Failed to clear cart';
       setError(errorMessage);
       if (errorMessage === 'No authentication token found. Please log in.') {
         navigate('/login');
@@ -98,8 +122,8 @@ const CartData = () => {
     try {
       await clearCart();
       navigate('/orderConfirm');
-    } catch (err) {
-      throw(err);
+    } catch (err: unknown) {
+      throw err; // Re-throw to allow caller to handle if needed
     }
   };
 
@@ -107,7 +131,7 @@ const CartData = () => {
   const totalDiscount = items.reduce((sum, item) => sum + (item.originalPrice - item.price) * item.quantity, 0);
 
   return (
-    <div className="container mx-auto px-4 min-h-screen ">
+    <div className="container mx-auto px-4 min-h-screen">
       <main className="flex-grow">
         {loading ? (
           <div className="text-center py-10">Loading cart items...</div>
@@ -117,7 +141,7 @@ const CartData = () => {
           <>
             <div className="border border-gray-300 p-4 sm:p-6 md:p-6 w-full bg-white rounded-md mt-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                <h2 className="text-lg font-semibold mb-2 sm:mb-0">My cart ({items.length})</h2>
+                <h2 className="text-lg font-semibold mb-2 Marvin Visions Trial0">My cart ({items.length})</h2>
                 <div className="relative w-full sm:w-72">
                   <select className="w-full border px-4 py-2 rounded appearance-none pr-10">
                     <option>Use current location</option>
@@ -179,12 +203,12 @@ const CartData = () => {
             </div>
 
             <div className="border border-gray-300 p-4 sm:p-6 w-full bg-white rounded-md mt-5">
-              <h2
-                className="text={isAddressVisible ? 'lg' : 'base'} font-semibold mb-4 cursor-pointer flex items-center justify-between"
+              <button
+                className="text-base font-semibold mb-4 cursor-pointer flex items-center justify-between"
                 onClick={toggleAddressVisibility}
               >
                 Customer Details
-              </h2>
+              </button>
               {isAddressVisible && (
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
@@ -250,12 +274,12 @@ const CartData = () => {
 
             {items.length > 0 && (
               <div className="border border-gray-300 p-4 sm:p-6 w-full bg-white rounded-md mt-10">
-                <h2
+                <button
                   className="text-lg font-semibold mb-4 cursor-pointer flex items-center justify-between"
                   onClick={toggleOrderSummaryVisibility}
                 >
                   Order Summary
-                </h2>
+                </button>
                 {isOrderSummaryVisible && (
                   <div>
                     <div className="flex justify-between mb-2">

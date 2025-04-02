@@ -8,11 +8,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type DropdownProps = {
-  username?: string; 
+  readonly username?: string; 
 };
 
 function Dropdown({ username: propUsername }: DropdownProps) {
-  const [username, setUsername] = useState(propUsername || '');
+  const [username, setUsername] = useState(propUsername ?? '');
   const navigate = useNavigate();
 
   useEffect(() => {

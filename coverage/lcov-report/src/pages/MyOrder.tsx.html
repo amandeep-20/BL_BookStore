@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -110,19 +110,17 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,14 +134,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,15 +159,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react'
-<span class="cstat-no" title="statement not covered" >import Header from '../components/Same/Header'</span>
-<span class="cstat-no" title="statement not covered" >import Footer from '../components/Same/Footer'</span>
-<span class="cstat-no" title="statement not covered" >import Breadcrumbs from '../components/Same/Breadcrumbs'</span>
-<span class="cstat-no" title="statement not covered" >import bookCover from '../assets/images/bookImage.png'</span>
-<span class="cstat-no" title="statement not covered" >import bookCover2 from '../assets/images/bookImage2.png'</span>
-<span class="cstat-no" title="statement not covered" >import OrderConatiner from '../components/Same/OrderConatiner'</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react'
+import Header from '../components/Same/Header'
+import Footer from '../components/Same/Footer'
+import Breadcrumbs from '../components/Same/Breadcrumbs'
+import bookCover from '../assets/images/bookImage.png'
+import bookCover2 from '../assets/images/bookImage2.png'
+import OrderConatiner from '../components/Same/OrderConatiner'
+import { v4 as uuidv4 } from 'uuid'
 &nbsp;
-const order = <span class="cstat-no" title="statement not covered" >[</span>
+const order = [
     {
         title: "Don't Make Me Think",
         author: "Steve Krug",
@@ -182,16 +185,16 @@ const order = <span class="cstat-no" title="statement not covered" >[</span>
     },
 ]
 &nbsp;
-function <span class="fstat-no" title="function not covered" >MyOrder(</span>) {
-<span class="cstat-no" title="statement not covered" >    return (</span>
+function MyOrder() {
+    return (
         &lt;div&gt;
             &lt;Header container='home' /&gt;
             &lt;div className='min-h-[83.75vh] max-w-6xl p-5 mx-auto flex flex-col gap-2 mt-2'&gt;
                 &lt;Breadcrumbs container='myOrder'/&gt;
                 {
-                    order.map(<span class="fstat-no" title="function not covered" >(o</span>rder, index) =&gt; {
-<span class="cstat-no" title="statement not covered" >                        return (</span>
-                            &lt;div key={index} className='py-2'&gt;
+                    order.map((order) =&gt; {
+                        return (
+                            &lt;div key={uuidv4()} className='py-2'&gt;
                                 &lt;OrderConatiner order={order} container='myOrder' /&gt;
                             &lt;/div&gt;
                         )
@@ -204,14 +207,14 @@ function <span class="fstat-no" title="function not covered" >MyOrder(</span>) {
     )
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default MyOrder</span></pre></td></tr></table></pre>
+export default MyOrder</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-01T08:21:15.666Z
+                at 2025-04-02T06:00:24.102Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

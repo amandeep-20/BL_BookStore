@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { NavLink } from "react-router-dom";
 import Books from "./Books";
 import BookCover1 from "../../assets/images/BookCover1.png";
@@ -17,10 +18,9 @@ import Shimmer from './Shimmer';
 
 const BooksCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const booksPerRow = 4; 
-  const rowsPerPage = 3; 
-  const booksPerPage = booksPerRow * rowsPerPage; 
+  const booksPerRow = 4;
+  const rowsPerPage = 3;
+  const booksPerPage = booksPerRow * rowsPerPage;
 
   const bookCovers = [
     BookCover1, BookCover2, BookCover3, BookCover4,
@@ -43,7 +43,6 @@ const BooksCard = () => {
   }));
 
   const totalPages = Math.ceil(updatedBooks.length / booksPerPage);
-
   const startIndex = (currentPage - 1) * booksPerPage;
   const endIndex = startIndex + booksPerPage;
   const currentBooks = updatedBooks.slice(startIndex, endIndex);
@@ -54,85 +53,83 @@ const BooksCard = () => {
     }
   };
 
-  const renderPagination = () => {
+  const createPageButton = (page: number, isActive: boolean) => (
+    <button
+      key={page}
+      onClick={() => handlePageChange(page)}
+      className={`px-3 py-1 mx-1 rounded ${
+        isActive ? "bg-red-700 text-white" : "bg-gray-200"
+      }`}
+    >
+      {page}
+    </button>
+  );
+
+  const renderSimplePagination = (totalPages: number, currentPage: number) => {
     const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(createPageButton(i, currentPage === i));
+    }
+    return pages;
+  };
+
+  const calculatePageRange = (
+    currentPage: number,
+    totalPages: number,
+    maxVisiblePages: number,
+    ellipsisThreshold: number
+  ) => {
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= ellipsisThreshold) {
+      endPage = maxVisiblePages - 2;
+    } else if (currentPage >= totalPages - ellipsisThreshold + 1) {
+      startPage = totalPages - (maxVisiblePages - 3);
+    }
+
+    return { startPage, endPage };
+  };
+
+  const renderComplexPagination = (
+    currentPage: number,
+    totalPages: number,
+    startPage: number,
+    endPage: number
+  ) => {
+    const pages = [];
+    pages.push(createPageButton(1, currentPage === 1));
+    if (startPage > 2) {
+      pages.push(<span key="start-ellipsis" className="mx-1">...</span>);
+    }
+    for (let i = startPage; i <= endPage; i++) {
+      if (i !== 1 && i !== totalPages) {
+        pages.push(createPageButton(i, currentPage === i));
+      }
+    }
+    if (endPage < totalPages - 1) {
+      pages.push(<span key="end-ellipsis" className="mx-1">...</span>);
+    }
+    pages.push(createPageButton(totalPages, currentPage === totalPages));
+    return pages;
+  };
+
+  const renderPagination = () => {
     const maxVisiblePages = 8;
     const ellipsisThreshold = 5;
 
     if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(
-          <button
-            key={i}
-            onClick={() => handlePageChange(i)}
-            className={`px-3 py-1 mx-1 rounded ${
-              currentPage === i ? "bg-red-700 text-white" : "bg-gray-200"
-            }`}
-          >
-            {i}
-          </button>
-        );
-      }
-    } else {
-      let startPage = Math.max(1, currentPage - 2);
-      let endPage = Math.min(totalPages, currentPage + 2);
-
-      if (currentPage <= ellipsisThreshold) {
-        endPage = maxVisiblePages - 2;
-      } else if (currentPage >= totalPages - ellipsisThreshold + 1) {
-        startPage = totalPages - (maxVisiblePages - 3);
-      }
-
-      pages.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(1)}
-          className={`px-3 py-1 mx-1 rounded ${
-            currentPage === 1 ? "bg-red-700 text-white" : "bg-gray-200"
-          }`}
-        >
-          1
-        </button>
-      );
-
-      if (startPage > 2) {
-        pages.push(<span key="start-ellipsis" className="mx-1">...</span>);
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        if (i !== 1 && i !== totalPages) {
-          pages.push(
-            <button
-              key={i}
-              onClick={() => handlePageChange(i)}
-              className={`px-3 py-1 mx-1 rounded ${
-                currentPage === i ? "bg-red-700 text-white" : "bg-gray-200"
-              }`}
-            >
-              {i}
-            </button>
-          );
-        }
-      }
-
-      if (endPage < totalPages - 1) {
-        pages.push(<span key="end-ellipsis" className="mx-1">...</span>);
-      }
-
-      pages.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className={`px-3 py-1 mx-1 rounded ${
-            currentPage === totalPages ? "bg-red-700 text-white" : "bg-gray-200"
-          }`}
-        >
-          {totalPages}
-        </button>
-      );
+      return renderSimplePagination(totalPages, currentPage);
     }
-
-    return pages;
+    
+    const { startPage, endPage } = calculatePageRange(
+      currentPage,
+      totalPages,
+      maxVisiblePages,
+      ellipsisThreshold
+    );
+    
+    return renderComplexPagination(currentPage, totalPages, startPage, endPage);
   };
 
   if (status === 'loading') {
@@ -140,8 +137,8 @@ const BooksCard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array(booksPerPage)
           .fill(0)
-          .map((_, index) => (
-            <div key={index} className="flex justify-center">
+          .map((_, i) => (
+            <div key={`shimmer-${uuidv4()}`} className="flex justify-center">
               <Shimmer />
             </div>
           ))}
@@ -157,15 +154,15 @@ const BooksCard = () => {
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentBooks.length > 0 ? (
-          currentBooks.map((book: any, index: number) => (
-            <NavLink key={index} to={`/home/${book._id}`} state={{ book }}>
-              <div className="flex justify-center">
+          currentBooks.map((book: any) => (
+            <NavLink key={book._id} to={`/home/${book._id}`} state={{ book }}>
+              <div key={book._id} className="flex justify-center">
                 <Books book={book} />
               </div>
             </NavLink>
           ))
         ) : (
-          <div>No books available</div> 
+          <div>No books available</div>
         )}
       </div>
 

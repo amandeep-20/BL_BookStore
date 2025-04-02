@@ -12,7 +12,7 @@ type BookType = {
 };
 
 type BookProps = {
-  book: BookType;
+  readonly book: BookType;
 };
 
 function Books({ book }: BookProps) {
