@@ -3,9 +3,9 @@ import React from "react";
 import bookImage from '../../assets/images/BookCover1.png';
 
 type orderProps = {
-  order: any;
-  container: string;
-  onRemove: (id: string) => void;
+  readonly order: any;
+  readonly container: string;
+  readonly onRemove: (id: string) => void;
 };
 
 function WishListContainer({ order, container, onRemove }: orderProps) {

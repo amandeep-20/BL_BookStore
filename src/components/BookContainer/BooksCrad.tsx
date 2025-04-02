@@ -13,7 +13,7 @@ import BookCover8 from "../../assets/images/BookCover8.png";
 import BookCover9 from "../../assets/images/BookCover9.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBooks } from '../../redux/bookSlice';
-import { RootState } from '../../redux/store';
+import { RootState, AppDispatch } from '../../redux/store';  // Import AppDispatch
 import Shimmer from './Shimmer'; 
 
 const BooksCard = () => {
@@ -28,7 +28,7 @@ const BooksCard = () => {
     BookCover9
   ];
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();  // Add type to useDispatch
   const { allBooks: books, status, error } = useSelector((state: RootState) => state.books);
 
   useEffect(() => {

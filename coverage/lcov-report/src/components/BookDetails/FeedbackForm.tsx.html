@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/20</span>
+                <span class='fraction'>25/26</span>
             </div>
         
             
@@ -180,14 +180,7 @@
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
 <a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a>
-<a name='L124'></a><a href='#L124'>124</a>
-<a name='L125'></a><a href='#L125'>125</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L118'></a><a href='#L118'>118</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,14 +273,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -323,116 +309,109 @@ interface Review {
 }
 &nbsp;
 interface FeedbackFormProps {
-  bookId: string;
-  onReviewSubmitted: (review: Review) =&gt; void;
+  readonly bookId: string;
+  readonly onReviewSubmitted: (review: Review) =&gt; void;
 }
 &nbsp;
 function FeedbackForm({ bookId, onReviewSubmitted }: FeedbackFormProps) {
-    const [rating, setRating] = useState(0);
-    const [hover, setHover] = useState(0);
-    const [reviewComment, setReviewComment] = useState("");
-    const [submitStatus, setSubmitStatus] = useState&lt;string | null&gt;(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submitStatus, setSubmitStatus] = useState&lt;string | null&gt;(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 &nbsp;
-    useEffect(() =&gt; {
-        if (submitStatus &amp;&amp; submitStatus.includes("success")) {
-            const timer = setTimeout(<span class="fstat-no" title="function not covered" >() =</span>&gt; {
-<span class="cstat-no" title="statement not covered" >                setSubmitStatus(null);</span>
-            }, 3000);
-            return () =&gt; clearTimeout(timer);
-        }
-    }, [submitStatus]);
+  useEffect(() =&gt; {
+    if (submitStatus?.includes("success")) {
+      const timer = setTimeout(<span class="fstat-no" title="function not covered" >() =</span>&gt; {
+<span class="cstat-no" title="statement not covered" >        setSubmitStatus(null);</span>
+      }, 3000);
+      return () =&gt; clearTimeout(timer);
+    }
+  }, [submitStatus]);
 &nbsp;
-    const handleSubmit = async () =&gt; {
-        if (!rating || !reviewComment.trim()) {
-            setSubmitStatus("Please provide both a rating and a review.");
-            return;
-        }
+  const handleSubmit = async () =&gt; {
+    if (!rating || !reviewComment.trim()) {
+      setSubmitStatus("Please provide both a rating and a review.");
+      return;
+    }
 &nbsp;
-        setIsSubmitting(true);
-        setSubmitStatus(null);
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 &nbsp;
-        try {
-            const response = await addBookReviews(reviewComment, rating, bookId);
-            const newReview: Review = {
-                _id: response._id || <span class="branch-1 cbranch-no" title="branch not covered" >Date.now().toString(),</span>
-                user_id: {
-                    fullName: "Current User",
-                },
-                rating: rating,
-                comment: reviewComment
-            };
+    try {
+      const response = await addBookReviews(reviewComment, rating, bookId);
+      const newReview: Review = {
+        _id: response._id || <span class="branch-1 cbranch-no" title="branch not covered" >Date.now().toString(),</span>
+        user_id: {
+          fullName: "Current User",
+        },
+        rating: rating,
+        comment: reviewComment,
+      };
 &nbsp;
-            onReviewSubmitted(newReview);
+      onReviewSubmitted(newReview);
 &nbsp;
-            setRating(0);
-            setReviewComment("");
-            setSubmitStatus("Review submitted successfully!");
-        } catch (error) {
-            setSubmitStatus("Failed to submit review. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+      setRating(0);
+      setReviewComment("");
+      setSubmitStatus("Review submitted successfully!");
+    } catch (error) {
+      setSubmitStatus("Failed to submit review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 &nbsp;
-    return (
-        &lt;div className="flex flex-col gap-4"&gt;
-            &lt;p className="text-lg"&gt;Customer Feedback&lt;/p&gt;
-            &lt;div className="flex flex-col rounded-sm gap-2 bg-[#F5F5F5] p-4"&gt;
-                &lt;p className="text-xs font-semibold"&gt;Overall rating&lt;/p&gt;
-                &lt;div className="flex gap-2"&gt;
-                    {[1, 2, 3, 4, 5].map((star) =&gt; (
-                        &lt;span
-                            key={star}
-                            onMouseEnter={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >setHover(star)}</span>
-                            onMouseLeave={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >setHover(0)}</span>
-                            onClick={() =&gt; setRating(star)}
-                            className="cursor-pointer text-xl"
-                        &gt;
-                            {star &lt;= (hover || rating) ? (
-                                &lt;IoStarSharp 
-                                    className="text-[#FFD700]" 
-                                    role="img"
-                                    aria-label="filled star"
-                                /&gt;
-                            ) : (
-                                &lt;IoStarOutline 
-                                    className="text-[#707070]" 
-                                    role="img"
-                                    aria-label="empty star"
-                                /&gt;
-                            )}
-                        &lt;/span&gt;
-                    ))}
-                &lt;/div&gt;
-                &lt;textarea
-                    className="w-full h-24 p-2 placeholder:text-sm"
-                    placeholder="Write your review"
-                    value={reviewComment}
-                    onChange={(e) =&gt; setReviewComment(e.target.value)}
-                    disabled={isSubmitting}
-                &gt;&lt;/textarea&gt;
-                &lt;div className="flex justify-end"&gt;
-                    &lt;button
-                        onClick={handleSubmit}
-                        className={`w-24 py-1 rounded-sm text-white text-sm transition ${
-                            isSubmitting 
-                                ? "bg-gray-400 cursor-not-allowed" 
-                                : "bg-[#3371B5] hover:bg-[#2A5C94]"
-                        }`}
-                        disabled={isSubmitting}
-                    &gt;
-                        {isSubmitting ? "Submitting..." : "Submit"}
-                    &lt;/button&gt;
-                &lt;/div&gt;
-                {submitStatus &amp;&amp; (
-                    &lt;p className={`text-sm mt-2 ${submitStatus.includes("success") ? "text-green-600" : "text-red-600"}`}&gt;
-                        {submitStatus}
-                    &lt;/p&gt;
+  return (
+    &lt;div className="flex flex-col gap-4"&gt;
+      &lt;p className="text-lg"&gt;Customer Feedback&lt;/p&gt;
+      &lt;div className="flex flex-col rounded-sm gap-2 bg-[#F5F5F5] p-4"&gt;
+        &lt;p className="text-xs font-semibold"&gt;Overall rating&lt;/p&gt;
+        &lt;div className="flex gap-2"&gt;
+          {[1, 2, 3, 4, 5].map((star) =&gt; (
+            &lt;button
+              key={star}
+              onMouseEnter={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >setHover(star)}</span>
+              onMouseLeave={<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >setHover(0)}</span>
+              onClick={() =&gt; setRating(star)}
+              className="cursor-pointer text-xl"
+              aria-label={star &lt;= (hover || rating) ? `Rated ${star} out of 5 stars` : `Rate ${star} out of 5 stars`}
+            &gt;
+              &lt;span&gt;
+                {star &lt;= (hover || rating) ? (
+                  &lt;IoStarSharp className="text-[#FFD700]" /&gt;
+                ) : (
+                  &lt;IoStarOutline className="text-[#707070]" /&gt;
                 )}
-            &lt;/div&gt;
+              &lt;/span&gt;
+            &lt;/button&gt;
+          ))}
         &lt;/div&gt;
-    );
+        &lt;textarea
+          className="w-full h-24 p-2 placeholder:text-sm"
+          placeholder="Write your review"
+          value={reviewComment}
+          onChange={(e) =&gt; setReviewComment(e.target.value)}
+          disabled={isSubmitting}
+        &gt;&lt;/textarea&gt;
+        &lt;div className="flex justify-end"&gt;
+          &lt;button
+            onClick={handleSubmit}
+            className={`w-24 py-1 rounded-sm text-white text-sm transition ${
+              isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#3371B5] hover:bg-[#2A5C94]"
+            }`}
+            disabled={isSubmitting}
+          &gt;
+            {isSubmitting ? "Submitting..." : "Submit"}
+          &lt;/button&gt;
+        &lt;/div&gt;
+        {submitStatus &amp;&amp; (
+          &lt;p className={`text-sm mt-2 ${submitStatus.includes("success") ? "text-green-600" : "text-red-600"}`}&gt;
+            {submitStatus}
+          &lt;/p&gt;
+        )}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
 }
 &nbsp;
 export default FeedbackForm;</pre></td></tr></table></pre>
@@ -442,7 +421,7 @@ export default FeedbackForm;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-02T06:00:24.102Z
+                at 2025-04-02T10:20:53.089Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

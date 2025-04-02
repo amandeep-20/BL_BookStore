@@ -4,20 +4,25 @@ import Footer from '../components/Same/Footer';
 import Breadcrumbs from '../components/Same/Breadcrumbs';
 import { getWishlist, removeWishlist } from '../utils/API';
 import WishListContainer from '../components/Same/WishListContainer';
+import { v4 as uuid } from 'uuid';
 
 function WishList() {
   const [wishlist, setWishlist] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const fetchWishlist = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
       const data = await getWishlist(token);
       setWishlist(data);
     } catch (err: any) {
+      setWishlist([]); // Reset wishlist on error
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -35,6 +40,26 @@ function WishList() {
     }
   };
 
+  const renderWishlistContent = () => {
+    if (loading) {
+      return <p className="p-4">Loading...</p>;
+    }
+    
+    if (wishlist.length === 0) {
+      return <p className="p-4">Your wishlist is empty.</p>;
+    }
+
+    return wishlist.map((item) => (
+      <div key={uuid()}>
+        <WishListContainer
+          order={item}
+          container="wishlist"
+          onRemove={handleRemoveFromWishlist}
+        />
+      </div>
+    ));
+  };
+
   return (
     <div>
       <Header container="home" />
@@ -44,21 +69,7 @@ function WishList() {
           <div className="p-4 bg-[#F5F5F5] border-2 border-[#E4E4E4]">
             <p className="font-bold">My Wishlist</p>
           </div>
-          {loading ? (
-            <p className="p-4">Loading...</p>
-          ) : wishlist.length === 0 ? (
-            <p className="p-4">Your wishlist is empty.</p>
-          ) : (
-            wishlist.map((item, index) => (
-              <div key={index}>
-                <WishListContainer
-                  order={item}
-                  container="wishlist"
-                  onRemove={handleRemoveFromWishlist}
-                />
-              </div>
-            ))
-          )}
+          {renderWishlistContent()}
         </div>
       </div>
       <Footer />

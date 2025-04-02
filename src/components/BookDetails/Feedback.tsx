@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
-import { getBookReviews } from "../../utils/API.js";
+import { getBookReviews } from "../../utils/API";
 import { useParams } from "react-router-dom";
-import FeedbackForm from "./FeedbackForm.js";
+import FeedbackForm from "./FeedbackForm";
 
-// New component to handle reviews rendering
-const ReviewsList = ({ reviews }) => {
+interface Review {
+  _id: string;
+  user_id: {
+    fullName: string;
+  };
+  rating: number;
+  comment: string;
+}
+
+interface ReviewsListProps {
+  reviews: Review[];
+}
+
+const ReviewsList = ({ reviews }: ReviewsListProps) => {
   if (reviews.length === 0) {
     return <p className="text-[#707070] text-center">No reviews yet.</p>;
   }
@@ -42,16 +54,19 @@ const ReviewsList = ({ reviews }) => {
 };
 
 function Feedback() {
-  const { id: routeBookId } = useParams();
-  const [reviews, setReviews] = useState([]);
-  const [error, setError] = useState(null);
-  const bookId = routeBookId;
+  const { id: routeBookId } = useParams<{ id: string }>();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const bookId = routeBookId ?? "";
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+        if (!bookId) {
+          throw new Error("No book ID provided");
+        }
         const result = await getBookReviews(bookId);
-        setReviews(result);
+        setReviews(result as Review[]);
       } catch (error) {
         setError("Failed to load reviews. Please try again later.");
         console.error("Error fetching reviews:", error);
@@ -63,7 +78,7 @@ function Feedback() {
     }
   }, [bookId]);
 
-  const handleNewReview = (newReview) => {
+  const handleNewReview = (newReview: Review) => {
     setReviews((prevReviews) => [...prevReviews, newReview]);
   };
 

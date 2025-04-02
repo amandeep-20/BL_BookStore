@@ -2,8 +2,8 @@ import { Circle} from "lucide-react";
 import React from "react";
 
 type orderProps = {
-  order: any;
-  container: string;
+  readonly order: any;
+  readonly container: string;
 };
 function OrderConatiner({ order, container }: orderProps) {
   return (

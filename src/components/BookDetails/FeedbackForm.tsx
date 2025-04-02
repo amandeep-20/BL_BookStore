@@ -22,7 +22,7 @@ function FeedbackForm({ bookId, onReviewSubmitted }: FeedbackFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (submitStatus && submitStatus.includes("success")) {
+    if (submitStatus?.includes("success")) {
       const timer = setTimeout(() => {
         setSubmitStatus(null);
       }, 3000);

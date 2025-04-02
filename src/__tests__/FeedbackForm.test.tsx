@@ -31,14 +31,26 @@ describe("FeedbackForm Component", () => {
   test("allows users to select a rating", async () => {
     render(<FeedbackForm bookId={bookId} onReviewSubmitted={mockOnReviewSubmitted} />);
 
-    const stars = screen.getAllByRole("img"); // This will now find all stars due to role="img"
-    fireEvent.click(stars[3]); // Selecting 4 stars (index 3 = 4th star)
+    // Query star buttons by their aria-label
+    const starButtons = [
+      screen.getByRole("button", { name: "Rate 1 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 2 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 3 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 4 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 5 out of 5 stars" }),
+    ];
+
+    fireEvent.click(starButtons[3]); // Selecting 4 stars (index 3 = 4th star)
 
     await waitFor(() => {
-        const filledStars = screen.getAllByRole("img", { name: /filled star/i });
-        expect(filledStars).toHaveLength(4); // Should find 4 filled stars
-    }, { timeout: 1000 }); // Add timeout to prevent hanging
-});
+      // Check if the aria-label updates to "Rated" for the clicked stars
+      expect(starButtons[0]).toHaveAttribute("aria-label", "Rated 1 out of 5 stars");
+      expect(starButtons[1]).toHaveAttribute("aria-label", "Rated 2 out of 5 stars");
+      expect(starButtons[2]).toHaveAttribute("aria-label", "Rated 3 out of 5 stars");
+      expect(starButtons[3]).toHaveAttribute("aria-label", "Rated 4 out of 5 stars");
+      expect(starButtons[4]).toHaveAttribute("aria-label", "Rate 5 out of 5 stars");
+    }, { timeout: 1000 });
+  });
 
   test("shows error message if review is submitted without rating or comment", async () => {
     render(<FeedbackForm bookId={bookId} onReviewSubmitted={mockOnReviewSubmitted} />);
@@ -55,10 +67,17 @@ describe("FeedbackForm Component", () => {
 
     render(<FeedbackForm bookId={bookId} onReviewSubmitted={mockOnReviewSubmitted} />);
 
-    const stars = screen.getAllByRole("img");
-    fireEvent.click(stars[4]); // Selecting 5 stars
-    fireEvent.change(screen.getByPlaceholderText("Write your review"), { 
-      target: { value: "Awesome book!" }
+    const starButtons = [
+      screen.getByRole("button", { name: "Rate 1 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 2 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 3 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 4 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 5 out of 5 stars" }),
+    ];
+
+    fireEvent.click(starButtons[4]); // Selecting 5 stars
+    fireEvent.change(screen.getByPlaceholderText("Write your review"), {
+      target: { value: "Awesome book!" },
     });
     fireEvent.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -82,10 +101,17 @@ describe("FeedbackForm Component", () => {
 
     render(<FeedbackForm bookId={bookId} onReviewSubmitted={mockOnReviewSubmitted} />);
 
-    const stars = screen.getAllByRole("img");
-    fireEvent.click(stars[4]); // Selecting 5 stars
-    fireEvent.change(screen.getByPlaceholderText("Write your review"), { 
-      target: { value: "Great book!" }
+    const starButtons = [
+      screen.getByRole("button", { name: "Rate 1 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 2 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 3 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 4 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 5 out of 5 stars" }),
+    ];
+
+    fireEvent.click(starButtons[4]); // Selecting 5 stars
+    fireEvent.change(screen.getByPlaceholderText("Write your review"), {
+      target: { value: "Great book!" },
     });
     fireEvent.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -99,12 +125,19 @@ describe("FeedbackForm Component", () => {
 
     render(<FeedbackForm bookId={bookId} onReviewSubmitted={mockOnReviewSubmitted} />);
 
-    const stars = screen.getAllByRole("img");
-    fireEvent.click(stars[4]); // Selecting 5 stars
-    fireEvent.change(screen.getByPlaceholderText("Write your review"), { 
-      target: { value: "Amazing read!" }
+    const starButtons = [
+      screen.getByRole("button", { name: "Rate 1 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 2 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 3 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 4 out of 5 stars" }),
+      screen.getByRole("button", { name: "Rate 5 out of 5 stars" }),
+    ];
+
+    fireEvent.click(starButtons[4]); // Selecting 5 stars
+    fireEvent.change(screen.getByPlaceholderText("Write your review"), {
+      target: { value: "Amazing read!" },
     });
-    
+
     const submitButton = screen.getByRole("button", { name: /submit/i });
     fireEvent.click(submitButton);
 

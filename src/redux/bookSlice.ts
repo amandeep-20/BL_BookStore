@@ -1,8 +1,9 @@
+// src/redux/bookSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { getAllBooks } from "../utils/API.js";
+import { getAllBooks } from "../utils/API";
 
 export interface Book {
-    _id?: string; // Match the API field (if using _id)
+    _id?: string;
     rating: number;
     title: string;
     author: string;
@@ -13,7 +14,7 @@ export interface Book {
     discountPrice?: number;
 }
 
-interface BooksState {
+export interface BooksState {  // Add export here
     allBooks: Book[];
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
@@ -21,7 +22,7 @@ interface BooksState {
 
 export const fetchBooks = createAsyncThunk<Book[]>("books/fetchBooks", async () => {
     const response = await getAllBooks();
-    return response; // Directly return the array
+    return response;
 });
 
 const initialState: BooksState = {
