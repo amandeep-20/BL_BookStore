@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
 import { getBookReviews } from "../../utils/API.js";
 import { useParams } from "react-router-dom";
@@ -35,7 +35,7 @@ function Feedback() {
 
   return (
     <div>
-      <FeedbackForm bookId={bookId} onReviewSubmitted={handleNewReview} />
+      {bookId && <FeedbackForm bookId={bookId} onReviewSubmitted={handleNewReview} />}
       {reviews.map((review) => (
         <div className="flex gap-3 py-2 items-start" key={review._id}>
           <div className="w-20 h-10 bg-[#F5F5F5] flex items-center justify-center rounded-full">

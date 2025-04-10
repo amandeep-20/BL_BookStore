@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bookCover from '../../assets/images/bookImage.png';
 import { FaPlus, FaMinus, FaMapMarkerAlt } from 'react-icons/fa';

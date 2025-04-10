@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../components/Same/Footer';
 import orderPlacedImage from '../assets/images/orderplaced.png';

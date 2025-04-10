@@ -1,4 +1,3 @@
-import React from 'react'
 import Breadcrumbs from '../components/Same/Breadcrumbs'
 import Header from '../components/Same/Header'
 import BookDetails from '../components/BookDetails/BookDetails'

@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "../components/Same/Header";
 import Footer from "../components/Same/Footer";
 import Breadcrumbs from "../components/Same/Breadcrumbs";

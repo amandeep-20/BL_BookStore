@@ -1,5 +1,4 @@
 import { Trash2 } from "lucide-react";
-import React from "react";
 import bookImage from '../../assets/images/BookCover1.png';
 
 type orderProps = {

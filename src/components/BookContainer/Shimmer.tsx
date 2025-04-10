@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Shimmer = () => {
   return (
     <div className="h-[275px] w-[235px] border border-[#E2E2E2] rounded-[3px] overflow-hidden max-[500px]:w-[175px]">

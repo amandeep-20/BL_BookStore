@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import bookImage from '../../assets/images/bookImage.png';
 import { FaHeart } from "react-icons/fa";

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useContext } from "react";
+import { useEffect, useMemo, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Books from "./Books";
 import BookCover1 from "../../assets/images/BookCover1.png";
@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../../redux/bookSlice";
 import { RootState } from "../../redux/store";
 import Shimmer from "./Shimmer";
-import { SearchContext } from "../../context/SearchProvider"; // Import SearchContext
+import { SearchContext } from "../../context/SearchProvider";
+import { AppDispatch } from "../../redux/store";
 
 const bookCovers = [
   BookCover1, BookCover2, BookCover3, BookCover4,
@@ -22,15 +23,16 @@ const bookCovers = [
   BookCover9,
 ];
 
+
 const BooksCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const booksPerRow = 4;
   const rowsPerPage = 3;
   const booksPerPage = booksPerRow * rowsPerPage;
-
-  const dispatch = useDispatch();
+  
+  const dispatch: AppDispatch = useDispatch();
   const { allBooks: books, status, error } = useSelector((state: RootState) => state.books);
-  const { searchQuery, sortQuery }: any = useContext(SearchContext); // Use SearchContext
+  const { searchQuery, sortQuery }: any = useContext(SearchContext); 
 
   useEffect(() => {
     if (status === "idle") {

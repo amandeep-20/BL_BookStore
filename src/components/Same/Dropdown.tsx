@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { FaRegUser } from 'react-icons/fa6';
 import { IoBagOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty } from 'react-icons/io';

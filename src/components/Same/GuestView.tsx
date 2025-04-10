@@ -1,4 +1,3 @@
-import React from 'react'
 import Img from '../../assets/images/Page-1.svg'
 import Header from '../Same/Header'
 import { NavLink } from 'react-router-dom'

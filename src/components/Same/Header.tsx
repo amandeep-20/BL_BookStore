@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import  { useContext, useState, useEffect } from 'react';
 import logo from '../../assets/images/education.svg';
 import { IoIosSearch } from 'react-icons/io';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
