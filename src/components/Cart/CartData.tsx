@@ -19,15 +19,19 @@ const CartData = () => {
       try {
         const response = await getCartItems();
         if (response.success) {
-          const cartItems = response.result.map(item => ({
-            id: item._id,
-            name: item.product_id.bookName,
-            author: item.product_id.author,
-            price: item.product_id.discountPrice,
-            originalPrice: item.product_id.price,
-            image: item.product_id.bookImage || bookCover,
-            quantity: item.quantityToBuy
-          }));
+          const cartItems = response.result.map(item => {
+            // Check if product_id exists and is an object
+            const product = item.product_id || {};
+            return {
+              id: item._id,
+              name: product.bookName || 'Unknown Book', // Fallback if bookName is missing
+              author: product.author || 'Unknown Author', // Fallback if author is missing
+              price: product.discountPrice || 0, // Fallback if discountPrice is missing
+              originalPrice: product.price || 0, // Fallback if price is missing
+              image: product.bookImage || bookCover, // Default image if bookImage is missing
+              quantity: item.quantityToBuy || 1 // Fallback if quantityToBuy is missing
+            };
+          });
           setItems(cartItems);
         }
       } catch (err) {
@@ -40,7 +44,7 @@ const CartData = () => {
         setLoading(false);
       }
     };
-
+  
     fetchCartItems();
   }, [navigate]);
 
