@@ -13,7 +13,7 @@ function WishList() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const data = await getWishlist(token);
+      const data = await getWishlist(token || '');
       console.log("Fetched wishlist:", data); 
       setWishlist(data || []); 
     } catch (err: any) {

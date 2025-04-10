@@ -15,7 +15,6 @@ function BookDetails() {
     const bookData = book || {};
     const [imageActive, setImageActive] = useState(0);
     const [addToCartState, setAddToCartState] = useState(false);
-    const [cartCount, setCartCount] = useState(1);
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -43,16 +42,6 @@ function BookDetails() {
         }
     }, [bookData._id]);
 
-    const incrementCart = () => {
-        setCartCount(prevCount => prevCount + 1);
-    };
-
-    const decrementCart = () => {
-        if (cartCount > 1) {
-            setCartCount(prevCount => prevCount - 1);
-        }
-    };
-
     const handleAddToCart = async () => {
         setIsLoading(true);
         setError(null);
@@ -75,20 +64,20 @@ function BookDetails() {
                                 price: bookData.discountPrice,
                                 originalPrice: bookData.price,
                                 image: bookData.pic || bookImage,
-                                quantity: cartCount
+                                quantity: 1
                             }]
                         }
                     });
                 }, 1000);
             }
         } catch (err) {
-            const errorMessage = err.response?.data?.message || err.message || 'Failed to add item to cart';
+            const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Failed to add item to cart';
             setError(errorMessage);
             toast.error(errorMessage, {
                 position: "top-right",
                 autoClose: 2000,
             });
-            if (errorMessage === 'No authentication token found. Please log in.' || err.response?.status === 401) {
+            if (errorMessage === 'No authentication token found. Please log in.' || (err as any)?.response?.status === 401) {
                 setTimeout(() => navigate('/guest'), 1000);
             }
         } finally {

@@ -12,10 +12,6 @@ interface SignupPayload {
   phone: string;
 }
 
-interface ReviewPayload {
-  comment: string;
-  rating: number;
-}
 
 interface ApiResponse<T> {
   result: T;

@@ -30,10 +30,11 @@ const Header = ({ container }: HeaderProps) => {
             try {
                 const response = await getCartItems();
                 if (response.success) {
-                    const cartItems = response.result.map(item => ({
+                    type CartItem = { quantityToBuy: number };
+                    const cartItems: { quantity: number }[] = response.result.map((item: CartItem) => ({
                         quantity: item.quantityToBuy,
                     }));
-                    const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    const totalCount = cartItems.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0);
                     setCartCount(totalCount);
                 }
             } catch (err) {

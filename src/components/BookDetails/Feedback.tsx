@@ -6,12 +6,15 @@ import FeedbackForm from "./FeedbackForm.js";
 
 function Feedback() {
   const { id: routeBookId } = useParams();
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<{ _id: string; user_id: { fullName: string }; rating: number; comment: string }[]>([]);
   const bookId = routeBookId;
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+        if (!bookId) {
+          throw new Error("Book ID is undefined");
+        }
         const result = await getBookReviews(bookId);
         setReviews(result);
       } catch (error) {
@@ -25,7 +28,7 @@ function Feedback() {
   }, [bookId]);
 
   // Callback function to add new review to the list
-  const handleNewReview = (newReview) => {
+  const handleNewReview = (newReview: { _id: string; user_id: { fullName: string; }; rating: number; comment: string; }) => {
     setReviews(prevReviews => [...prevReviews, newReview]);
   };
   

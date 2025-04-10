@@ -19,23 +19,34 @@ const CartData = () => {
       try {
         const response = await getCartItems();
         if (response.success) {
-          const cartItems = response.result.map(item => {
-            // Check if product_id exists and is an object
+          type CartItemResponse = {
+            _id: string | number;
+            product_id?: {
+              bookName?: string;
+              author?: string;
+              discountPrice?: number;
+              price?: number;
+              bookImage?: string;
+            };
+            quantityToBuy?: number;
+          };
+
+          const cartItems = response.result.map((item: CartItemResponse) => {
             const product = item.product_id || {};
             return {
               id: item._id,
-              name: product.bookName || 'Unknown Book', // Fallback if bookName is missing
-              author: product.author || 'Unknown Author', // Fallback if author is missing
-              price: product.discountPrice || 0, // Fallback if discountPrice is missing
-              originalPrice: product.price || 0, // Fallback if price is missing
-              image: product.bookImage || bookCover, // Default image if bookImage is missing
-              quantity: item.quantityToBuy || 1 // Fallback if quantityToBuy is missing
+              name: product.bookName || 'Unknown Book',
+              author: product.author || 'Unknown Author', 
+              price: product.discountPrice || 0, 
+              originalPrice: product.price || 0, 
+              image: product.bookImage || bookCover,
+              quantity: item.quantityToBuy || 1 
             };
           });
           setItems(cartItems);
         }
       } catch (err) {
-        const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch cart items';
+        const errorMessage = (err as any)?.response?.data?.message || (err as any)?.message || 'Failed to fetch cart items';
         setError(errorMessage);
         if (errorMessage === 'No authentication token found. Please log in.') {
           navigate('/login');
@@ -53,7 +64,12 @@ const CartData = () => {
 
   interface Item {
     id: number | string;
+    name: string; 
+    author: string; 
     quantity: number;
+    price: number; 
+    originalPrice: number; 
+    image: string; 
   }
   
   const updateQuantity = (id: Item['id'], delta: number): void => {
@@ -66,7 +82,7 @@ const CartData = () => {
     );
   };
 
-  const removeItem = async (id) => {
+  const removeItem = async (id: string) => {
     try {
       const response = await removeFromCart(id);
       if (response.success) {
@@ -75,7 +91,7 @@ const CartData = () => {
         setError(response.message || 'Failed to remove item from cart');
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to remove item from cart';
+      const errorMessage = (err as any)?.response?.data?.message || (err as any)?.message || 'Failed to remove item from cart';
       setError(errorMessage);
       if (errorMessage === 'No authentication token found. Please log in.') {
         navigate('/login');
@@ -85,12 +101,12 @@ const CartData = () => {
 
   const clearCart = async () => {
     try {
-      const removePromises = items.map(item => removeFromCart(item.id));
+      const removePromises = items.map(item => removeFromCart(String(item.id)));
       await Promise.all(removePromises);
       
       setItems([]);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to clear cart';
+      const errorMessage = (err as any)?.response?.data?.message || (err as any)?.message || 'Failed to clear cart';
       setError(errorMessage);
       if (errorMessage === 'No authentication token found. Please log in.') {
         navigate('/login');
@@ -169,7 +185,7 @@ const CartData = () => {
                             <FaPlus />
                           </button>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(String(item.id))}
                             className="text-blue-500 text-sm ml-4"
                           >
                             Remove
